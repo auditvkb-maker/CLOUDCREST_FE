@@ -307,16 +307,6 @@ export function LandingHero() {
 
             {checking && <NameCheckProgress name={checkingName} />}
 
-            {!checking && check && (
-              <NameCheckResult
-                check={check}
-                similar={similar}
-                filter={structure}
-                backend={BACKEND}
-                onProceed={proceedWith}
-                onClose={() => setCheck(null)}
-              />
-            )}
 
             {(showSimilar || filteredModules.length > 0) && (
               <div className="mt-3 rounded-xl bg-white text-foreground shadow-elev border border-border text-left overflow-hidden">
@@ -419,6 +409,17 @@ export function LandingHero() {
                   </div>
                 )}
               </div>
+            )}
+
+            {!checking && check && (
+              <NameCheckResult
+                check={check}
+                similar={similar}
+                filter={structure}
+                backend={BACKEND}
+                onProceed={proceedWith}
+                onClose={() => setCheck(null)}
+              />
             )}
           </div>
 

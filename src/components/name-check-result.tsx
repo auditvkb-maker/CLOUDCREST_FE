@@ -270,47 +270,14 @@ function useCompanyDetails(backend: string, cin?: string) {
 }
 
 /* ------------------------------------------------------------------ *
- * Rings
+ * Risk styling
  * ------------------------------------------------------------------ */
 
-const RISK_STYLE: Record<Risk, { color: string; fill: number; text: string }> = {
-  High: { color: "var(--destructive)", fill: 0.85, text: "text-destructive" },
-  Medium: { color: "oklch(0.75 0.16 70)", fill: 0.55, text: "text-amber-600" },
-  Low: { color: "var(--success)", fill: 0.25, text: "text-success" },
+const RISK_STYLE: Record<Risk, { text: string }> = {
+  High: { text: "text-destructive" },
+  Medium: { text: "text-amber-600" },
+  Low: { text: "text-success" },
 };
-
-function Ring({
-  fraction,
-  color,
-  children,
-}: {
-  fraction: number;
-  color: string;
-  children: React.ReactNode;
-}) {
-  const r = 52;
-  const c = 2 * Math.PI * r;
-  return (
-    <div className="relative size-36">
-      <svg viewBox="0 0 120 120" className="size-full -rotate-90">
-        <circle cx="60" cy="60" r={r} fill="none" stroke="var(--border)" strokeWidth="10" />
-        <circle
-          cx="60"
-          cy="60"
-          r={r}
-          fill="none"
-          stroke={color}
-          strokeWidth="10"
-          strokeLinecap="round"
-          strokeDasharray={c}
-          strokeDashoffset={c * (1 - fraction)}
-          style={{ transition: "stroke-dashoffset 900ms ease-out" }}
-        />
-      </svg>
-      <div className="absolute inset-0 grid place-items-center text-center">{children}</div>
-    </div>
-  );
-}
 
 /* ------------------------------------------------------------------ *
  * The box
@@ -401,7 +368,7 @@ export function NameCheckResult({
 
   return (
     <div className="mt-4 rounded-2xl bg-white text-foreground shadow-elev border border-border text-left overflow-hidden animate-in-up">
-      <div className="relative px-6 pt-7 pb-5 text-center">
+      <div className="relative px-6 pt-5 pb-4 text-center">
         <button
           type="button"
           onClick={onClose}
@@ -515,44 +482,20 @@ export function NameCheckResult({
         )}
       </div>
 
-      {/* Risk & confidence */}
-      <div className="mt-6 px-6 grid grid-cols-2 gap-4">
-        {[
-          {
-            label: "Risk Level",
-            ring: (
-              <Ring fraction={risk.fill} color={risk.color}>
-                <div>
-                  <div className={`text-2xl font-display font-semibold ${risk.text}`}>
-                    {assessment.risk}
-                  </div>
-                  <div className="text-[10px] text-muted-foreground">Risk level</div>
-                </div>
-              </Ring>
-            ),
-          },
-          {
-            label: "Confidence",
-            ring: (
-              <Ring fraction={assessment.confidence / 100} color="var(--primary)">
-                <div>
-                  <div className="text-2xl font-display font-semibold text-foreground">
-                    {assessment.confidence}%
-                  </div>
-                  <div className="text-[10px] text-muted-foreground">Approval confidence</div>
-                </div>
-              </Ring>
-            ),
-          },
-        ].map((g) => (
-          <div key={g.label} className="flex flex-col items-center">
-            <div className="text-sm font-semibold mb-2">{g.label}</div>
-            {g.ring}
-          </div>
-        ))}
+      {/* Risk & confidence — stated plainly. Two 144px dials said no more than
+          the words do and cost most of the panel's height. */}
+      <div className="mt-4 px-6 flex flex-wrap items-center gap-x-6 gap-y-1.5 text-sm">
+        <div className="flex items-center gap-1.5">
+          <span className="text-muted-foreground">Risk level:</span>
+          <span className={`font-semibold ${risk.text}`}>{assessment.risk}</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-muted-foreground">Confidence:</span>
+          <span className="font-semibold text-foreground">{assessment.confidence}%</span>
+        </div>
       </div>
       <div
-        className={`mx-6 mt-5 rounded-xl border p-3.5 flex items-start gap-2.5 text-[13px] ${
+        className={`mx-6 mt-4 rounded-xl border p-3 flex items-start gap-2.5 text-[13px] ${
           assessment.risk === "High"
             ? "border-destructive/30 bg-destructive/5"
             : assessment.risk === "Medium"
@@ -565,7 +508,7 @@ export function NameCheckResult({
       </div>
 
       {/* Proceed */}
-      <div className="px-6 py-5">
+      <div className="px-6 py-4">
         {check.available && !choosing && (
           <button
             type="button"
