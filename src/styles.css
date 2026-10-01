@@ -392,11 +392,17 @@
 }
 
 /* Active service link: a glowing rail. */
+/* Pulses opacity only. box-shadow cannot be composited, so animating it ran a
+   repaint every frame, forever, inside the sidebar's scroll container — which
+   is what made scrolling the module list stutter. The glow itself is now a
+   static shadow and only its opacity breathes, which stays on the compositor. */
 @keyframes rail-glow {
-  0%, 100% { opacity: 0.85; box-shadow: 0 0 6px 0 var(--primary); }
-  50%      { opacity: 1; box-shadow: 0 0 12px 1px var(--primary); }
+  0%, 100% { opacity: 0.8; }
+  50%      { opacity: 1; }
 }
 @utility nav-rail-glow {
+  box-shadow: 0 0 9px 0 var(--primary);
+  will-change: opacity;
   animation: rail-glow 2.4s ease-in-out infinite;
 }
 

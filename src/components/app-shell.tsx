@@ -352,7 +352,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
                         const active = m.slug === activeSlug;
                         const Icon = m.icon;
                         const linkClass =
-                          "group relative flex items-center gap-2.5 pl-3 pr-2 py-2 rounded-md text-[14.5px] transition-all duration-200 " +
+                          "group relative flex items-center gap-2.5 pl-3 pr-2 py-2 rounded-md text-[14.5px] transition-[color,background-color,transform] duration-200 " +
                           (active
                             ? "text-primary font-semibold bg-primary/10 translate-x-0.5"
                             : "text-foreground font-medium hover:text-primary hover:bg-primary/10 hover:translate-x-0.5");
@@ -370,7 +370,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
                             <span className="flex-1 truncate">{m.short}</span>
                             <ChevronRight
                               className={
-                                "size-3 shrink-0 transition-all " +
+                                "size-3 shrink-0 transition-[color,opacity,transform] " +
                                 (active
                                   ? "text-primary opacity-100"
                                   : "text-muted-foreground/40 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0")
