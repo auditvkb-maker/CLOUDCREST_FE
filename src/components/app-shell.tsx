@@ -254,7 +254,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
           onScrollCapture={cancelAutoCollapse}
           className={
             "flex-shrink-0 bg-surface flex flex-col fixed md:sticky top-0 md:top-16 left-0 h-screen md:h-[calc(100vh-4rem)] self-start transition-[width] duration-200 overflow-hidden z-50 md:z-30 " +
-            (sidebarCollapsed ? "w-0 border-r-0" : "w-80 max-w-[85vw] border-r border-border")
+            (sidebarCollapsed ? "w-0 border-r-0" : "w-72 max-w-[85vw] border-r border-border")
           }
         >
           {!sidebarCollapsed && (
@@ -321,7 +321,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
                   >
                     <span
                       className={
-                        "flex-1 min-w-0 break-words leading-snug text-[11.5px] font-bold uppercase tracking-[0.07em] transition-colors " +
+                        "flex-1 min-w-0 break-words leading-snug text-[11.5px] font-bold uppercase tracking-[0.12em] transition-colors " +
                         (hasActiveChild ? "text-primary" : "text-foreground group-hover:text-primary")
                       }
                     >
