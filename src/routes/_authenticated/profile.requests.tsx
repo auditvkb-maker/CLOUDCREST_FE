@@ -274,7 +274,7 @@ function RequestsPage() {
                       <span className="font-semibold group-hover:text-primary transition-colors">{r.serviceTitle}</span>
                     </div>
                     <div className="text-[11px] text-muted-foreground mt-0.5">
-                      {r.authority} {r.form ? `· ${r.form}` : ""}
+                      {r.authority} {r.form && r.form !== "—" ? `· ${r.form}` : ""}
                     </div>
                   </td>
                   <td className="px-4 py-3.5 mono text-[12px] font-bold text-foreground/90 whitespace-nowrap">{r.referenceNo}</td>
@@ -428,7 +428,7 @@ function RegistrationDetailDialog({
                 {request.referenceNo}
               </span>
               <span className="text-white/80 text-xs font-medium">
-                {request.authority}{request.form ? ` · ${request.form}` : ""}
+                {request.authority}{request.form && request.form !== "—" ? ` · ${request.form}` : ""}
               </span>
             </div>
             <h3 className="text-lg sm:text-xl font-display font-bold leading-snug text-white truncate">
