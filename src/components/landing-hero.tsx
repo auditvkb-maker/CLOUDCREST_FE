@@ -231,14 +231,14 @@ export function LandingHero() {
               "radial-gradient(ellipse 46% 34% at 50% 42%, oklch(0.21 0.05 258 / 0.55), transparent 72%)",
           }}
         />
-        <div className="relative max-w-5xl mx-auto px-8 pt-14 pb-20 text-center">
+        <div className="relative max-w-5xl mx-auto px-8 pt-6 pb-12 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/20 text-[11px] mono uppercase tracking-widest text-white/90">
             <span className="size-1.5 rounded-full bg-destructive live-dot" />
             <span className="size-1.5 rounded-full bg-success" />
             <span className="size-1.5 rounded-full bg-primary" />
             India's compliance workspace · {count(allModules.length)} registration modules
           </div>
-          <h1 className="mt-7 text-5xl md:text-7xl lg:text-[5.5rem] font-display font-semibold tracking-[-0.03em] leading-[0.92]">
+          <h1 className="mt-5 text-5xl md:text-7xl lg:text-[5.5rem] font-display font-semibold tracking-[-0.03em] leading-[0.92]">
             Start your{" "}
             <span className="bg-clip-text text-transparent animated-gradient" style={{ backgroundImage: "linear-gradient(90deg, oklch(0.68 0.22 27), oklch(0.72 0.16 152) 50%, oklch(0.7 0.20 255), oklch(0.68 0.22 27))" }}>
               business registration
@@ -246,7 +246,7 @@ export function LandingHero() {
           </h1>
 
           {/* Search */}
-          <div className="mt-9 mx-auto w-full max-w-3xl px-2 sm:px-0">
+          <div className="mt-6 mx-auto w-full max-w-3xl px-2 sm:px-0">
             <div className="mb-4 flex flex-wrap justify-center gap-2" role="radiogroup" aria-label="Business structure">
               {STRUCTURE_FILTERS.map((f) => {
                 const active = structure === f.key;
