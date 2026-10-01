@@ -311,6 +311,29 @@ export default function AppShell({ children }: { children?: ReactNode }) {
               const isOpen = searchQuery.trim() ? true : !!openGroups[group.label];
               const hasActiveChild = group.items.some((m) => m.slug === activeSlug);
 
+              // A coming-soon category carries no services (the catalog withholds
+              // them), so the heading is a link to its notice rather than a
+              // disclosure control that would open onto nothing.
+              if (group.comingSoon) {
+                return (
+                  <div key={group.label} className="nav-in" style={{ "--i": gi } as React.CSSProperties}>
+                    <Link
+                      to="/c/$categoryId"
+                      params={{ categoryId: String(group.id ?? "") }}
+                      onClick={closeSidebarOnMobile}
+                      className="group w-full flex items-start gap-2 px-2 py-2 rounded-md text-left transition-colors cursor-pointer select-none hover:bg-primary/10"
+                    >
+                      <span className="flex-1 min-w-0 break-words leading-snug text-[11.5px] font-bold uppercase tracking-[0.12em] text-foreground group-hover:text-primary transition-colors">
+                        {group.label}
+                      </span>
+                      <span className="shrink-0 mt-[1px] px-1.5 py-0.5 rounded-full bg-warning/15 text-warning text-[9px] font-semibold uppercase tracking-wide">
+                        Soon
+                      </span>
+                    </Link>
+                  </div>
+                );
+              }
+
               return (
                 <div key={group.label} className="nav-in" style={{ "--i": gi } as React.CSSProperties}>
                   {/* Section heading — flat, no card */}

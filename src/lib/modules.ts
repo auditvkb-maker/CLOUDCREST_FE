@@ -18,7 +18,11 @@ export type ModuleItem = {
 };
 
 export type ModuleGroup = {
+  /** Category id — only needed to link a coming-soon category to its notice page. */
+  id?: number;
   label: string;
+  /** The whole category is announced but not open for filing; `items` is empty. */
+  comingSoon?: boolean;
   items: ModuleItem[];
 };
 
@@ -101,7 +105,9 @@ export const LEGACY_SLUG_REDIRECTS: Record<string, string> = {
 
 /** A service published from the admin catalog (DB-driven). */
 export type CatalogGroup = {
+  id?: number;
   label: string;
+  comingSoon?: boolean;
   items: {
     slug: string; title: string; short: string; authority: string; form: string; icon?: string;
     timelineDays?: string | null; documentsCount?: number | null;
@@ -217,7 +223,9 @@ export function catalogToGroups(groups: CatalogGroup[]): ModuleGroup[] {
       const iconName = CATEGORY_ICON[g.label] ?? g.items.find((i) => i.icon)?.icon ?? null;
       const groupIcon = iconFor(iconName);
       return {
+        id: g.id,
         label: g.label,
+        comingSoon: !!g.comingSoon,
         items: g.items
           .filter((i) => !!i.slug)
           .map((i) => ({
@@ -234,7 +242,8 @@ export function catalogToGroups(groups: CatalogGroup[]): ModuleGroup[] {
           .sort((a, b) => rankOf(ITEM_ORDER, a.slug) - rankOf(ITEM_ORDER, b.slug)),
       };
     })
-    .filter((g) => g.items.length > 0)
+    // A coming-soon category is intentionally empty — it still belongs in the list.
+    .filter((g) => g.comingSoon || g.items.length > 0)
     // Order the categories themselves to match the document.
     .sort((a, b) => rankOf(CATEGORY_ORDER, a.label) - rankOf(CATEGORY_ORDER, b.label));
 

@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MSlugRouteImport } from './routes/m.$slug'
+import { Route as CCategoryIdRouteImport } from './routes/c.$categoryId'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -39,6 +40,11 @@ const IndexRoute = IndexRouteImport.update({
 const MSlugRoute = MSlugRouteImport.update({
   id: '/m/$slug',
   path: '/m/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CCategoryIdRoute = CCategoryIdRouteImport.update({
+  id: '/c/$categoryId',
+  path: '/c/$categoryId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/profile': typeof AuthenticatedProfileRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/c/$categoryId': typeof CCategoryIdRoute
   '/m/$slug': typeof MSlugRoute
   '/profile/documents': typeof AuthenticatedProfileDocumentsRoute
   '/profile/orders': typeof AuthenticatedProfileOrdersRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/admin/login': typeof AdminLoginRoute
+  '/c/$categoryId': typeof CCategoryIdRoute
   '/m/$slug': typeof MSlugRoute
   '/profile/documents': typeof AuthenticatedProfileDocumentsRoute
   '/profile/orders': typeof AuthenticatedProfileOrdersRoute
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/c/$categoryId': typeof CCategoryIdRoute
   '/m/$slug': typeof MSlugRoute
   '/_authenticated/profile/documents': typeof AuthenticatedProfileDocumentsRoute
   '/_authenticated/profile/orders': typeof AuthenticatedProfileOrdersRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/profile'
     | '/admin/login'
+    | '/c/$categoryId'
     | '/m/$slug'
     | '/profile/documents'
     | '/profile/orders'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/admin'
     | '/admin/login'
+    | '/c/$categoryId'
     | '/m/$slug'
     | '/profile/documents'
     | '/profile/orders'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/profile'
     | '/admin/login'
+    | '/c/$categoryId'
     | '/m/$slug'
     | '/_authenticated/profile/documents'
     | '/_authenticated/profile/orders'
@@ -174,6 +186,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  CCategoryIdRoute: typeof CCategoryIdRoute
   MSlugRoute: typeof MSlugRoute
 }
 
@@ -205,6 +218,13 @@ declare module '@tanstack/react-router' {
       path: '/m/$slug'
       fullPath: '/m/$slug'
       preLoaderRoute: typeof MSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/c/$categoryId': {
+      id: '/c/$categoryId'
+      path: '/c/$categoryId'
+      fullPath: '/c/$categoryId'
+      preLoaderRoute: typeof CCategoryIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/login': {
@@ -303,6 +323,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   AdminLoginRoute: AdminLoginRoute,
+  CCategoryIdRoute: CCategoryIdRoute,
   MSlugRoute: MSlugRoute,
 }
 export const routeTree = rootRouteImport
