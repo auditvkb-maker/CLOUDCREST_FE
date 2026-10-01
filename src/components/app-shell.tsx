@@ -136,7 +136,14 @@ export default function AppShell({ children }: { children?: ReactNode }) {
         g.label.toLowerCase().includes(q)
     );
     return { ...g, items: filteredItems };
-  }).filter((g) => g.items.length > 0);
+  }).filter(
+    // A coming-soon category has no items by design — it must still be listed.
+    // While searching it is kept only when its own name matches, since there are
+    // no services in it for the query to hit.
+    (g) =>
+      g.items.length > 0 ||
+      (g.comingSoon && (!searchQuery.trim() || g.label.toLowerCase().includes(searchQuery.toLowerCase()))),
+  );
 
   return (
     <div className="min-h-screen w-full text-foreground flex flex-col">
