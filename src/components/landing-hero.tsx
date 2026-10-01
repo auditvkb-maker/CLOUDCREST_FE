@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useCatalogGroups } from "@/lib/service-catalog";
 import { useAuth } from "@/hooks/use-auth";
-import { HeroBackdrop } from "@/components/hero-backdrop";
 import { SignInDialog } from "@/components/sign-in-dialog";
 import {
   NameCheckProgress,
@@ -221,7 +220,6 @@ export function LandingHero() {
       <section className="relative overflow-hidden gradient-hero text-white">
         {/* Panning technical grid under the filing scene. */}
         <div className="hero-grid" />
-        <HeroBackdrop />
         {/* Light scrim directly behind the copy only — strong enough to keep text
             readable, weak enough that the scene still reads through it. */}
         <div
@@ -443,23 +441,6 @@ export function LandingHero() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Kinetic marquee band */}
-      <section className="bg-navy text-navy-foreground border-y border-white/5 overflow-hidden py-5">
-        <div className="marquee-track flex w-max items-center gap-8 whitespace-nowrap">
-          {Array.from({ length: 2 }).flatMap((_, dup) =>
-            [
-              "Company", "LLP", "GST", "MSME", "IEC", "Trademark", "Patent",
-              "FSSAI", "EPF", "ESI", "Trade Licence", "Copyright", "Startup India",
-            ].map((word) => (
-              <span key={`${dup}-${word}`} className="flex items-center gap-8 text-2xl md:text-3xl font-display font-medium tracking-tight">
-                <span className="text-navy-foreground/80 hover:text-primary transition-colors">{word}</span>
-                <span className="text-primary/60 text-lg">✦</span>
-              </span>
-            )),
-          )}
         </div>
       </section>
 
