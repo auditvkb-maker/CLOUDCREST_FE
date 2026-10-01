@@ -38,7 +38,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
    * first thing they see, then folds itself away after this long to give the
    * page its full width back.
    */
-  const AUTO_COLLAPSE_MS = 10_000;
+  const AUTO_COLLAPSE_MS = 5_000;
   const autoCollapseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /**
