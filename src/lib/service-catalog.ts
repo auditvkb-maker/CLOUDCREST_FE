@@ -8,6 +8,11 @@ import { MODULE_GROUPS, catalogToGroups, type ModuleGroup } from "@/lib/modules"
  * `professionalFee` & co. are absent for anonymous visitors.
  */
 export type CatalogService = {
+  /**
+   * The owning category is marked "coming soon", so the service is browsable but
+   * not yet open for applications. Set per category in Admin -> Catalog.
+   */
+  comingSoon?: boolean;
   slug: string;
   title: string;
   short: string;
@@ -72,6 +77,8 @@ const BACKEND = () => import.meta.env.VITE_BACKEND_URL || "";
 
 /** `GET /api/services/slug/:slug` response — the raw table rows, not the view model. */
 type ServiceBySlugResponse = {
+  /** True when the owning category is marked "coming soon" in Admin -> Catalog. */
+  comingSoon?: boolean;
   service: {
     slug: string | null;
     name: string;
@@ -112,6 +119,7 @@ function toCatalogService(data: ServiceBySlugResponse, slug: string): CatalogSer
   const tabs = (stored.length > 0 ? stored : defaultTabs(s as any)).filter((t) => t.visible);
 
   return {
+    comingSoon: data.comingSoon ?? false,
     slug: s.slug ?? slug,
     title: s.name,
     short: s.shortTitle ?? s.name,

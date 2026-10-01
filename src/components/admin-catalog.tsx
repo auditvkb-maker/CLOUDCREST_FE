@@ -194,6 +194,29 @@ export function AdminCatalogPanel() {
                   </button>
                   <Layers className="size-4 text-primary shrink-0" />
                   <span className="font-semibold text-sm flex-1 truncate">{cat.name}</span>
+                  {/* Whole-category availability. Its services stay listed either
+                      way — "Coming soon" only stops an application being started
+                      and shows a notice on the service page instead. */}
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await call(`/categories/${cat.id}`, "PUT", { comingSoon: !cat.comingSoon });
+                      refresh();
+                    }}
+                    title={
+                      cat.comingSoon
+                        ? `"${cat.name}" is marked coming soon — click to make it active`
+                        : `"${cat.name}" is active — click to mark it coming soon`
+                    }
+                    className={
+                      "shrink-0 px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors " +
+                      (cat.comingSoon
+                        ? "bg-warning/15 text-warning border-warning/30 hover:bg-warning/25"
+                        : "bg-success/15 text-success border-success/30 hover:bg-success/25")
+                    }
+                  >
+                    {cat.comingSoon ? "Coming soon" : "Active"}
+                  </button>
                   <RowActions
                     onAdd={() =>
                       setNameDialog({

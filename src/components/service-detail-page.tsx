@@ -12,7 +12,7 @@ import { AdvisorProceedDialog } from "@/components/advisor-proceed-dialog";
 import { useAuth } from "@/hooks/use-auth";
 import {
   Info, CheckCircle2, FileText, Gavel, Download, ArrowRight, ArrowLeft,
-  Loader2, Wallet, Send, Landmark, ShieldCheck, Sparkles,
+  Loader2, Wallet, Send, Landmark, ShieldCheck, Sparkles, Clock,
 } from "lucide-react";
 
 const BACKEND = (import.meta.env.VITE_BACKEND_URL || "").replace(/\/$/, "");
@@ -161,6 +161,11 @@ export function ServiceDetail({
   });
 
   const startApplication = () => {
+    // A category marked coming soon is browsable but not open for filing. Guard
+    // here rather than only hiding the button, so no other entry point into the
+    // flow (a deep link, a keyboard activation on a stale render) can start an
+    // application for something that cannot be filed yet.
+    if (service.comingSoon) return;
     setProceedOpen(true);
   };
 
@@ -210,6 +215,27 @@ export function ServiceDetail({
           >
             {service.title}
           </h1>
+
+          {/* The whole category is marked coming soon in Admin -> Catalog. The page
+              still describes the service — that is the point of listing it — but
+              says plainly that it cannot be applied for yet. */}
+          {service.comingSoon && (
+            <div
+              className="rise-in mt-6 flex items-start gap-3 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 max-w-2xl"
+              style={{ "--i": 2 } as React.CSSProperties}
+              role="status"
+            >
+              <Clock className="size-5 shrink-0 text-warning mt-0.5" />
+              <div>
+                <div className="font-semibold text-sm">Coming soon</div>
+                <div className="text-sm text-muted-foreground mt-0.5">
+                  We're not accepting applications for this service yet. Everything below is
+                  what the filing will involve — get in touch and we'll tell you the moment
+                  it opens.
+                </div>
+              </div>
+            </div>
+          )}
 
           <div
             className="rise-in mt-6 flex flex-wrap gap-2"
