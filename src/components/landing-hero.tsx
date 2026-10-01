@@ -430,7 +430,7 @@ export function LandingHero() {
           </p>
 
           {/* Oversized stat band */}
-          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4 border-t border-white/10 pt-10">
+          <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-4 border-t border-white/10 pt-6">
             {[
               { n: "12,400+", l: "Businesses served" },
               { n: "4.8/5", l: "Client rating" },
