@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/reveal";
 import { Link } from "@tanstack/react-router";
 import { Database, ShieldAlert, Gavel, ArrowRight, Phone } from "lucide-react";
 import {
@@ -38,7 +39,7 @@ export function RegistryScale() {
   return (
     <section className="bg-navy text-navy-foreground">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-14 md:py-20">
-        <div className="max-w-2xl">
+        <Reveal className="max-w-2xl">
           <div className="label-eyebrow text-primary mb-2">Name availability</div>
           <h2 className="text-3xl md:text-4xl font-display font-semibold tracking-[-0.02em] leading-[1.08]">
             Checked against the real register
@@ -48,11 +49,15 @@ export function RegistryScale() {
             pay anything — against the whole register, including the struck-off list that still
             blocks a name.
           </p>
-        </div>
+        </Reveal>
 
         <div className="mt-10 grid gap-6 md:gap-8 sm:grid-cols-3">
-          {FACTS.map((f) => (
-            <div key={f.label} className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+          {FACTS.map((f, i) => (
+            <Reveal
+              key={f.label}
+              delay={i * 110}
+              className="reveal-scale lift rounded-2xl border border-white/10 bg-white/[0.04] p-6"
+            >
               <span className="grid place-items-center size-10 rounded-xl bg-primary/20 text-primary">
                 <f.icon className="size-5" />
               </span>
@@ -63,7 +68,7 @@ export function RegistryScale() {
                 {f.label}
               </div>
               <p className="mt-3 text-[13px] text-navy-foreground/70 leading-relaxed">{f.body}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -112,7 +117,7 @@ export function HomeFaq() {
     <section className="border-b border-border bg-surface">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-14 md:py-20">
         <div className="grid gap-10 lg:gap-16 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)]">
-          <div className="min-w-0">
+          <Reveal className="reveal-left min-w-0">
             <div className="label-eyebrow text-primary mb-2">Questions</div>
             <h2 className="text-3xl md:text-4xl font-display font-semibold tracking-[-0.02em] leading-[1.08]">
               Before you file
@@ -128,9 +133,10 @@ export function HomeFaq() {
               <Phone className="size-4" />
               +91 89770 79433
             </a>
-          </div>
+          </Reveal>
 
-          <Accordion type="single" collapsible className="min-w-0 w-full">
+          <Reveal className="reveal-right min-w-0" delay={120}>
+            <Accordion type="single" collapsible className="w-full">
             {FAQS.map((f, i) => (
               <AccordionItem key={f.q} value={`faq-${i}`} className="border-border">
                 <AccordionTrigger className="text-left text-[15px] font-semibold hover:no-underline">
@@ -141,7 +147,8 @@ export function HomeFaq() {
                 </AccordionContent>
               </AccordionItem>
             ))}
-          </Accordion>
+            </Accordion>
+          </Reveal>
         </div>
       </div>
     </section>
@@ -151,7 +158,7 @@ export function HomeFaq() {
 export function HomeCta() {
   return (
     <section className="relative overflow-hidden gradient-hero text-white">
-      <div className="relative max-w-[1400px] mx-auto px-6 md:px-12 py-16 md:py-24 text-center">
+      <Reveal className="relative max-w-[1400px] mx-auto px-6 md:px-12 py-16 md:py-24 text-center">
         <h2 className="text-3xl md:text-5xl font-display font-semibold tracking-[-0.025em] leading-[1.04] max-w-3xl mx-auto">
           Start with the name. We'll handle the rest.
         </h2>
@@ -174,7 +181,7 @@ export function HomeCta() {
             Talk to an advisor
           </a>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

@@ -728,3 +728,77 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-float, .hero-float-chip { animation: none; }
 }
+
+/* ---------------------------------------------------------------------------
+   Scroll reveal
+
+   Entrances driven by `Reveal` / `CountUp` in components/reveal.tsx. The hidden
+   state is only ever added by that component after it mounts, never as a plain
+   class in the markup: nothing may depend on JavaScript to become visible.
+
+   Transform and opacity only, so these composite without laying out or
+   painting. A reveal that is already on screen at mount skips the hidden state
+   entirely, so the top of the page never flashes blank.
+--------------------------------------------------------------------------- */
+.reveal-hidden {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+}
+.reveal-shown {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Variants for content that reads better arriving from the side — paired
+   columns, or a panel next to its copy. */
+.reveal-hidden.reveal-left  { transform: translate3d(-26px, 0, 0); }
+.reveal-hidden.reveal-right { transform: translate3d(26px, 0, 0); }
+.reveal-hidden.reveal-scale { transform: translate3d(0, 16px, 0) scale(0.97); }
+.reveal-shown.reveal-scale  { transform: translate3d(0, 0, 0) scale(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-hidden, .reveal-shown {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* A horizontally swipeable row with no visible scrollbar — used for the hero's
+   structure chips, which wrapped onto a second row on a phone and pushed the
+   search field towards the fold. */
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* Hover lift for content cards. Transform and shadow-opacity only; the shadow
+   is painted once on a pseudo-element and faded, rather than animating
+   box-shadow itself, which would repaint the card on every frame. */
+@utility lift {
+  position: relative;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 26px 56px -18px oklch(0.25 0.09 262 / 0.45);
+    transition: opacity 0.35s ease;
+  }
+  &:hover {
+    transform: translateY(-4px);
+    &::after { opacity: 1; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lift { transition: none; }
+  .lift:hover { transform: none; }
+}

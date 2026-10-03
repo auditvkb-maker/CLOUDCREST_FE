@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/reveal";
 import { Quote, Building2, Users, Briefcase, CalendarDays } from "lucide-react";
 
 /**
@@ -43,7 +44,7 @@ export function HomeAbout() {
     <section className="border-b border-border bg-surface">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-14 md:py-20">
         <div className="grid gap-10 lg:gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] items-start">
-          <div className="min-w-0">
+          <Reveal className="reveal-left min-w-0">
             <div className="label-eyebrow text-primary mb-2">About us</div>
             <h2 className="text-3xl md:text-4xl font-display font-semibold tracking-[-0.02em] leading-[1.08]">
               A practice, not a portal
@@ -75,15 +76,17 @@ export function HomeAbout() {
                 </div>
               ))}
             </div>
-          </div>
+          </Reveal>
 
           {/* Testimonials */}
           <div className="min-w-0 space-y-4">
             <div className="label-eyebrow text-primary">What clients say</div>
-            {TESTIMONIALS.map((t) => (
-              <figure
+            {TESTIMONIALS.map((t, i) => (
+              <Reveal
+                as="figure"
                 key={t.name}
-                className="rounded-2xl border border-border bg-card p-5 shadow-[0_10px_30px_-18px_oklch(0.25_0.09_262_/_0.5)]"
+                delay={i * 130}
+                className="reveal-right lift rounded-2xl border border-border bg-card p-5 shadow-[0_10px_30px_-18px_oklch(0.25_0.09_262_/_0.5)]"
               >
                 <Quote className="size-4 text-primary/50" />
                 <blockquote className="mt-2.5 text-[13.5px] leading-relaxed text-foreground">
@@ -100,7 +103,7 @@ export function HomeAbout() {
                     </span>
                   </span>
                 </figcaption>
-              </figure>
+              </Reveal>
             ))}
           </div>
         </div>

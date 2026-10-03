@@ -26,6 +26,7 @@ import wave from "@/assets/software/wave.svg";
 import vyapar from "@/assets/software/vyapar.svg";
 import microsoft from "@/assets/software/microsoft.svg";
 import mygate from "@/assets/software/mygate.svg";
+import { Reveal } from "@/components/reveal";
 
 /**
  * Client and software logo marquees.
@@ -123,14 +124,14 @@ export function HomeClients() {
     <section className="border-b border-border bg-background">
       <div className="py-12 md:py-16">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+          <Reveal className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
             <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
               Trusted by businesses across Hyderabad and beyond
             </h2>
             <span className="mono text-[11px] text-muted-foreground/70">
               Pharma · Software · Healthcare · Education · Housing
             </span>
-          </div>
+          </Reveal>
         </div>
 
         <div className="mt-8">
@@ -138,11 +139,11 @@ export function HomeClients() {
         </div>
 
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 mt-12">
-          <div className="border-t border-border pt-8">
+          <Reveal className="border-t border-border pt-8">
             <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
               We work in the books you already keep
             </h2>
-          </div>
+          </Reveal>
         </div>
 
         <div className="mt-7">

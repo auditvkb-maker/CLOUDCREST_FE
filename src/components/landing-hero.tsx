@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { Reveal } from "@/components/reveal";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useCatalogGroups } from "@/lib/service-catalog";
 import { useAuth } from "@/hooks/use-auth";
@@ -101,6 +102,16 @@ export function LandingHero() {
     isAdmin
       ? navigate({ to: "/admin", search: { service: slug } })
       : navigate({ to: "/m/$slug", params: { slug } });
+  // Focus the field on arrival, but only where a keyboard is already out.
+  // `autoFocus` on a phone opens the on-screen keyboard the moment the page
+  // loads, covering the headline and the trust line with it.
+  const searchRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    if (window.matchMedia("(min-width: 1024px) and (pointer: fine)").matches) {
+      searchRef.current?.focus();
+    }
+  }, []);
+
   const [q, setQ] = useState("");
   const [checking, setChecking] = useState(false);
   // The structure the applicant intends to register — see the note at the top.
@@ -267,15 +278,38 @@ export function LandingHero() {
 
         <div className="relative max-w-[1400px] mx-auto px-6 md:px-12 pt-4 pb-10 text-center lg:text-left">
           <div className="lg:max-w-[58%]">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 border border-border shadow-sm text-[11px] mono uppercase tracking-widest text-muted-foreground">
-            <span className="size-1.5 rounded-full bg-destructive live-dot" />
-            <span className="size-1.5 rounded-full bg-success" />
-            <span className="size-1.5 rounded-full bg-primary" />
-            India's compliance workspace · {count(allModules.length)} registration modules
+          <div className="rise-in inline-flex max-w-full items-center gap-2 whitespace-nowrap rounded-full border border-border bg-white/80 px-3 py-1 text-[10px] sm:text-[11px] mono uppercase tracking-wider sm:tracking-widest text-muted-foreground shadow-sm">
+            <span className="size-1.5 shrink-0 rounded-full bg-destructive live-dot" />
+            <span className="size-1.5 shrink-0 rounded-full bg-success" />
+            <span className="size-1.5 shrink-0 rounded-full bg-primary" />
+            {/* The full sentence wrapped onto two lines on a phone and broke
+                the pill's shape; below sm it keeps only the part that carries
+                information. Until the count arrives there is no number worth
+                shortening to, so both widths show the label alone. */}
+            {loading ? (
+              <>
+                <span className="hidden sm:inline">India's compliance workspace</span>
+                <span className="sm:hidden">Compliance workspace</span>
+              </>
+            ) : (
+              <>
+                <span className="hidden sm:inline">India's compliance workspace · </span>
+                {count(allModules.length)} registration modules
+              </>
+            )}
           </div>
-          <h1 className="mt-4 text-[2.3rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] font-display font-semibold tracking-[-0.03em] leading-[0.98]">
-            Start your{" "}
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(120deg, oklch(0.62 0.20 255), oklch(0.52 0.20 262) 55%, oklch(0.46 0.19 268))" }}>
+          <h1 className="mt-3 sm:mt-4 text-[2.05rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] font-display font-semibold tracking-[-0.03em] leading-[1.02] sm:leading-[0.98]">
+            <span className="rise-in inline-block" style={{ "--i": 1 } as React.CSSProperties}>
+              Start your{" "}
+            </span>
+            <span
+              className="rise-in inline-block bg-clip-text text-transparent"
+              style={{
+                "--i": 2,
+                backgroundImage:
+                  "linear-gradient(120deg, oklch(0.62 0.20 255), oklch(0.52 0.20 262) 55%, oklch(0.46 0.19 268))",
+              } as React.CSSProperties}
+            >
               business registration
             </span>
           </h1>
@@ -286,7 +320,19 @@ export function LandingHero() {
               aria-hidden
               className="hero-search-glow pointer-events-none absolute left-1/2 top-[3.2rem] h-20 w-[85%] -translate-x-1/2 -translate-y-1/2"
             />
-            <div className="mb-4 flex flex-wrap justify-center lg:justify-start gap-2" role="radiogroup" aria-label="Business structure">
+            {/* On a phone these wrapped onto a second row and pushed the
+                search field towards the fold; below sm they become one
+                swipeable row instead. */}
+            <div className="relative mb-4 sm:mb-0">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[oklch(0.98_0.008_250)] to-transparent sm:hidden"
+              />
+              <div
+                className="-mx-2 flex snap-x gap-2 overflow-x-auto px-2 pb-4 no-scrollbar sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 justify-start sm:justify-center lg:justify-start"
+                role="radiogroup"
+                aria-label="Business structure"
+              >
               {STRUCTURE_FILTERS.map((f) => {
                 const active = structure === f.key;
                 return (
@@ -296,7 +342,7 @@ export function LandingHero() {
                     role="radio"
                     aria-checked={active}
                     onClick={() => setStructure(f.key)}
-                    className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border transition-all ${
+                    className={`shrink-0 snap-start px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border transition-all active:scale-95 ${
                       active
                         ? "bg-primary text-white border-primary shadow-brand"
                         : "bg-white/70 text-foreground border-border hover:bg-white hover:border-primary/40"
@@ -306,6 +352,7 @@ export function LandingHero() {
                   </button>
                 );
               })}
+              </div>
             </div>
             <form
               onSubmit={(e) => { e.preventDefault(); checkAndGo(q.trim()); }}
@@ -322,12 +369,12 @@ export function LandingHero() {
                 </div>
 
                 <input
-                  autoFocus
+                  ref={searchRef}
                   disabled={checking}
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
                   placeholder="Enter your business name — e.g. Acme Tech"
-                  className="flex-1 min-w-0 py-4 pr-4 text-left text-foreground text-sm sm:text-base placeholder:text-muted-foreground bg-transparent focus:outline-none"
+                  className="flex-1 min-w-0 py-4 pr-4 text-left text-foreground text-base placeholder:text-muted-foreground bg-transparent focus:outline-none"
                 />
               </div>
 
@@ -353,7 +400,7 @@ export function LandingHero() {
             {/* What the search actually costs and covers, stated where the
                 decision is made. "Free" is the main objection this removes. */}
             {!check && !checking && (
-              <ul className="mt-3.5 flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-1.5 text-[12.5px] text-muted-foreground">
+              <ul className="mt-3.5 flex flex-wrap items-center justify-center lg:justify-start gap-x-4 sm:gap-x-5 gap-y-1.5 text-[11.5px] sm:text-[12.5px] text-muted-foreground">
                 {[
                   "Free — no account needed",
                   "27 lakh+ companies & LLPs",
@@ -485,7 +532,7 @@ export function LandingHero() {
             )}
           </div>
 
-          <p className="mt-5 text-muted-foreground text-base md:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
+          <p className="mt-4 sm:mt-5 text-muted-foreground text-[15px] sm:text-base md:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
             Check your name against the live MCA register, upload documents once, and let a CA or
             CS handle every filing — MCA, GST, MSME, Trademark and more.
           </p>
@@ -500,7 +547,11 @@ export function LandingHero() {
               sits on also appears. */}
           <div
             aria-hidden
-            className="pointer-events-none hidden lg:block absolute right-12 top-1/2 w-[25rem] xl:w-[27rem] -translate-y-1/2"
+            /* Anchored to a fixed offset from the top rather than centred: a
+               name check expands the column to its left by several hundred
+               pixels, and a centred card slid down the page as the results
+               opened. */
+            className="pointer-events-none hidden lg:block absolute right-12 top-32 xl:top-36 w-[25rem] xl:w-[27rem]"
           >
             <div className="hero-float rounded-2xl border border-white/60 bg-white/85 p-5 shadow-[0_32px_80px_-24px_oklch(0.25_0.09_262_/_0.45)] backdrop-blur-xl">
               <div className="flex items-center gap-2.5 rounded-xl border border-border bg-background px-3.5 py-2.5">
@@ -556,7 +607,7 @@ export function LandingHero() {
           </div>
 
           {/* Oversized stat band */}
-          <div className="mt-7 grid grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-4 border-t border-border pt-6">
+          <div className="mt-6 sm:mt-7 grid grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-4 border-t border-border pt-6">
             {[
               { n: "10+", l: "Years of expertise" },
               { n: "100+", l: "Active clients" },
@@ -564,8 +615,8 @@ export function LandingHero() {
               { n: "500+", l: "Completed jobs" },
             ].map((s) => (
               <div key={s.l}>
-                <div className="text-3xl md:text-4xl font-display font-semibold tracking-tight">{s.n}</div>
-                <div className="mt-1 text-[11px] mono uppercase tracking-widest text-muted-foreground">{s.l}</div>
+                <div className="text-[1.75rem] sm:text-3xl md:text-4xl font-display font-semibold tracking-tight">{s.n}</div>
+                <div className="mt-1 text-[10px] sm:text-[11px] mono uppercase tracking-wider sm:tracking-widest text-muted-foreground">{s.l}</div>
               </div>
             ))}
           </div>
@@ -589,7 +640,7 @@ export function LandingHero() {
           <span className="cards-sheen" />
         </div>
         <div className="relative z-[1] max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="max-w-2xl">
+          <Reveal className="max-w-2xl">
             <div className="label-eyebrow text-primary mb-2">Services</div>
             <h2 className="text-3xl md:text-5xl font-display font-semibold tracking-[-0.02em] leading-[1.04]">
               Everything you need to run a{" "}
@@ -599,17 +650,16 @@ export function LandingHero() {
               The filings most businesses start with — open the menu for all{" "}
               {loading ? "our" : `${allModules.length}`} registrations, renewals and closures.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {popular.map((m, ci) => {
               const Icon = m.icon;
               return (
+                <Reveal key={m.slug} delay={ci * 70} className="reveal-scale">
                 <button
-                  key={m.slug}
                   onClick={() => openService(m.slug)}
-                  style={{ "--i": ci } as React.CSSProperties}
-                  className="card-in group relative flex flex-col min-h-[13rem] overflow-hidden rounded-2xl text-left border border-border bg-surface p-6 shadow-[0_4px_10px_-2px_oklch(0.2_0.04_260_/_0.1),0_18px_44px_-12px_oklch(0.2_0.04_260_/_0.18)] transition-all duration-300 hover:-translate-y-1.5 hover:border-primary hover:bg-navy hover:shadow-[0_28px_64px_-14px_oklch(0.24_0.08_260_/_0.75)]"
+                  className="group relative flex h-full w-full flex-col min-h-[13rem] overflow-hidden rounded-2xl text-left border border-border bg-surface p-6 shadow-[0_4px_10px_-2px_oklch(0.2_0.04_260_/_0.1),0_18px_44px_-12px_oklch(0.2_0.04_260_/_0.18)] transition-all duration-300 hover:-translate-y-1.5 hover:border-primary hover:bg-navy hover:shadow-[0_28px_64px_-14px_oklch(0.24_0.08_260_/_0.75)]"
                 >
                   <span
                     className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -647,13 +697,14 @@ export function LandingHero() {
                     </div>
                   )}
                 </button>
+                </Reveal>
               );
             })}
           </div>
 
           {/* The rail is the full catalog, so this opens it rather than
               navigating to yet another list. */}
-          <div className="mt-10 flex justify-center">
+          <Reveal className="mt-10 flex justify-center">
             <button
               type="button"
               onClick={openSidebar}
@@ -662,7 +713,7 @@ export function LandingHero() {
               View all {loading ? "" : `${allModules.length} `}services
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </button>
-          </div>
+          </Reveal>
         </div>
       </section>
 
