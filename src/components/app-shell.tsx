@@ -1,11 +1,24 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { SiteFooter } from "@/components/site-footer";
+import { ServiceNudge } from "@/components/service-nudge";
 import { Phone, Mail, Search, Bell, ChevronRight, ChevronDown, User, LogIn, LogOut, FileText, Receipt, Settings as SettingsIcon, ShieldAlert, LifeBuoy, FolderTree, Users, Menu, X } from "lucide-react";
 import { useCatalogGroups } from "@/lib/service-catalog";
 import { SupportFab } from "@/components/support-fab";
-import { useState, useRef, useEffect, type ReactNode } from "react";
+import { useState, useRef, useEffect, createContext, useContext, type ReactNode } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import logo from "@/assets/cloudcrest-logo.png";
+
+/**
+ * Lets a page rendered inside the shell open the sidebar — the home page's
+ * "View all services" needs it, and the rail's open state lives up here.
+ * Falls back to a no-op so a component used outside the shell still renders.
+ */
+const SidebarControl = createContext<{ open: () => void }>({ open: () => {} });
+
+export function useSidebarControl() {
+  return useContext(SidebarControl);
+}
 
 export default function AppShell({ children }: { children?: ReactNode }) {
   const location = useRouterState({ select: (s) => s.location });
@@ -112,6 +125,18 @@ export default function AppShell({ children }: { children?: ReactNode }) {
     setOpenGroups(Object.fromEntries(groups.map((g) => [g.label, g.label === activeGroup.label])));
   }, [activeSlug, groups]);
 
+  /** Open one group and close the rest — the list stays one screen tall. */
+  const openOnly = (label: string) => {
+    setOpenGroups(() => {
+      const next: Record<string, boolean> = {};
+      groups.forEach((g) => {
+        next[g.label] = false;
+      });
+      next[label] = true;
+      return next;
+    });
+  };
+
   const toggleGroup = (label: string) => {
     cancelAutoCollapse();
     setOpenGroups((prev) => {
@@ -124,6 +149,27 @@ export default function AppShell({ children }: { children?: ReactNode }) {
       return next;
     });
   };
+
+  /**
+   * Hover opens a group without needing a click. The short delay is intent:
+   * without it, every heading the pointer crosses on its way down the list
+   * would snap open and shut. Leaving before it fires simply cancels.
+   */
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelHoverOpen = () => {
+    if (hoverTimer.current) {
+      clearTimeout(hoverTimer.current);
+      hoverTimer.current = null;
+    }
+  };
+  const hoverOpenGroup = (label: string) => {
+    cancelHoverOpen();
+    hoverTimer.current = setTimeout(() => {
+      cancelAutoCollapse();
+      openOnly(label);
+    }, 140);
+  };
+  useEffect(() => cancelHoverOpen, []);
 
   const filteredGroups = groups.map((g) => {
     if (!searchQuery.trim()) return g;
@@ -146,6 +192,14 @@ export default function AppShell({ children }: { children?: ReactNode }) {
   );
 
   return (
+    <SidebarControl.Provider
+      value={{
+        open: () => {
+          cancelAutoCollapse();
+          setSidebarCollapsed(false);
+        },
+      }}
+    >
     <div className="min-h-screen w-full text-foreground flex flex-col">
       {/* Top utility strip (navy) */}
       <div className="bg-navy text-navy-foreground">
@@ -347,6 +401,9 @@ export default function AppShell({ children }: { children?: ReactNode }) {
                   <button
                     type="button"
                     onClick={() => toggleGroup(group.label)}
+                    onMouseEnter={() => hoverOpenGroup(group.label)}
+                    onMouseLeave={cancelHoverOpen}
+                    onFocus={() => openOnly(group.label)}
                     className="group w-full flex items-start gap-2 px-2 py-2 rounded-md text-left transition-colors cursor-pointer select-none hover:bg-primary/10"
                   >
                     <span
@@ -449,13 +506,19 @@ export default function AppShell({ children }: { children?: ReactNode }) {
         {/* Main */}
         <main className="flex-1 flex flex-col min-w-0">
           <div className="flex-1 min-w-0">{children ?? <Outlet />}</div>
+          {/* Every route renders through AppShell, so mounting the footer here
+              gives it to the whole site rather than to the landing page alone. */}
+          <SiteFooter />
         </main>
+
+        <ServiceNudge />
       </div>
 
       {/* Floating support ticket widget — hidden inside the admin console, since
           admins answer tickets rather than raise them. */}
       {!isAdminView && <SupportFab />}
     </div>
+    </SidebarControl.Provider>
   );
 }
 

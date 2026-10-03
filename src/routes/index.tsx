@@ -6,11 +6,22 @@ import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
+    // Leads with the words people search for, and with the free name check,
+    // which is the reason to click this result over the one above it. The old
+    // copy said "20+ registrations" when the catalog had grown past fifty.
     meta: [
-      { title: "Cloudcrest BM — Register your Indian business, end to end" },
-      { name: "description", content: "Search your company name, upload documents, and get MCA, GST, MSME, Trademark and 20+ registrations filed by Cloudcrest BM associates." },
-      { property: "og:title", content: "Cloudcrest BM — Business Registration & Compliance" },
-      { property: "og:description", content: "One dashboard to register a Company, LLP, GST, MSME, IEC, Trademark and more. Backed by CA/CS professionals." },
+      { title: "Company Registration, GST & Trademark Filing in India | Cloudcrest" },
+      {
+        name: "description",
+        content:
+          "Check your company name against the live MCA register for free, then let a CA or CS file it. Private Limited, LLP, GST, MSME, trademark and 50+ more registrations, handled end to end.",
+      },
+      { property: "og:title", content: "Company Registration, GST & Trademark Filing in India" },
+      {
+        property: "og:description",
+        content:
+          "Free MCA name check — including struck-off names most checkers miss. Then a CA or CS handles the filing end to end.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

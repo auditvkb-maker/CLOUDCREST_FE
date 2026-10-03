@@ -15,6 +15,8 @@ export type ModuleItem = {
   /** Home-card chips, admin-editable (null when unset — the card falls back). */
   timelineDays?: string | null;
   documentsCount?: number | null;
+  /** Picked out for the home page's shortlist, set per service in Admin -> Catalog. */
+  featured?: boolean;
 };
 
 export type ModuleGroup = {
@@ -110,7 +112,7 @@ export type CatalogGroup = {
   comingSoon?: boolean;
   items: {
     slug: string; title: string; short: string; authority: string; form: string; icon?: string;
-    timelineDays?: string | null; documentsCount?: number | null;
+    timelineDays?: string | null; documentsCount?: number | null; featured?: boolean;
   }[];
 };
 
@@ -237,6 +239,7 @@ export function catalogToGroups(groups: CatalogGroup[]): ModuleGroup[] {
             form: i.form || undefined,
             timelineDays: i.timelineDays ?? null,
             documentsCount: i.documentsCount ?? null,
+            featured: !!i.featured,
           }))
           // Order services within the category to match the document.
           .sort((a, b) => rankOf(ITEM_ORDER, a.slug) - rankOf(ITEM_ORDER, b.slug)),

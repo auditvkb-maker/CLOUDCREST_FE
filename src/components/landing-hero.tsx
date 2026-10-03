@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useCatalogGroups } from "@/lib/service-catalog";
 import { useAuth } from "@/hooks/use-auth";
 import { SignInDialog } from "@/components/sign-in-dialog";
+import { useSidebarControl } from "@/components/app-shell";
+import { ProductDemo } from "@/components/product-demo";
+import { RegistryScale, HomeFaq, HomeCta } from "@/components/home-sections";
+import { HomeAbout } from "@/components/home-about";
+import { HomeClients } from "@/components/home-clients";
 import {
   NameCheckProgress,
   NameCheckResult,
@@ -13,7 +18,8 @@ import {
   type StructureFilter,
 } from "@/components/name-check-result";
 import {
-  Search, ArrowRight, ShieldCheck, Sparkles, Clock, Users, FileText, CheckCircle2, AlertCircle,
+  Search, ArrowRight, ShieldCheck, Clock, Users, FileText, CheckCircle2, AlertCircle,
+  FileCheck2, BadgeCheck, ChevronDown,
 } from "lucide-react";
 
 
@@ -67,7 +73,25 @@ export function LandingHero() {
   const { isAdmin, isAuthenticated, loading: authLoading } = useAuth();
   // Same source as the sidebar, so an admin-published service shows up in both.
   const { groups, loading } = useCatalogGroups();
+  const { open: openSidebar } = useSidebarControl();
   const allModules = groups.flatMap((g) => g.items);
+  /**
+   * The home page's shortlist, chosen per service in Admin -> Catalog.
+   *
+   * Which filings lead the page is a merchandising decision that belongs to
+   * whoever runs the business, not to a list hardcoded here. These slugs are
+   * only the fallback for a catalog where nothing has been featured yet, so the
+   * section is never empty before anyone has configured it.
+   */
+  const FALLBACK_SLUGS = ["company", "llp", "gst", "trademark", "msme", "fssai"];
+  const featured = allModules.filter((m) => m.featured);
+  const popular = (
+    featured.length > 0
+      ? featured
+      : FALLBACK_SLUGS.map((sl) => allModules.find((m) => m.slug === sl)).filter(
+          (m): m is (typeof allModules)[number] => !!m,
+        )
+  ).slice(0, 6);
   // While the catalog loads, counts derived from it are 0 — show an em dash
   // instead of flashing "0" until the real numbers arrive.
   const count = (n: number) => (loading ? "—" : String(n));
@@ -81,6 +105,14 @@ export function LandingHero() {
   const [checking, setChecking] = useState(false);
   // The structure the applicant intends to register — see the note at the top.
   const [structure, setStructure] = useState<StructureFilter>("all");
+  /**
+   * The catalog is 55 services. Rendering every one made the page a ~6,400px
+   * wall of identical cards with nothing to stop the eye. Each category shows
+   * its first six and offers the rest, so the page stays scannable and the
+   * reader chooses where to go deeper.
+   */
+  const [expandedCats, setExpandedCats] = useState<Record<string, boolean>>({});
+  const CARDS_PER_CATEGORY = 6;
   // The last completed availability check, rendered as the result box.
   const [check, setCheck] = useState<NameCheck | null>(null);
   // The name the in-flight check is running on (for the progress box).
@@ -217,35 +249,44 @@ export function LandingHero() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden gradient-hero text-white">
+      <section className="relative overflow-hidden bg-[linear-gradient(180deg,oklch(0.99_0.004_250)_0%,oklch(0.96_0.018_250)_55%,oklch(0.93_0.03_250)_100%)] text-foreground">
         {/* Panning technical grid under the filing scene. */}
         <div className="hero-grid" />
-        {/* Light scrim directly behind the copy only — strong enough to keep text
-            readable, weak enough that the scene still reads through it. */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse 46% 34% at 50% 42%, oklch(0.21 0.05 258 / 0.55), transparent 72%)",
-          }}
-        />
-        <div className="relative max-w-5xl mx-auto px-8 pt-2 pb-10 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/20 text-[11px] mono uppercase tracking-widest text-white/90">
+
+        {/* Hero artwork.
+            Razorpay anchors its hero with a customer photo, Stripe with a large
+            flowing gradient; both put a single bold shape on the right and align
+            the copy left. This is that shape, drawn from the brand blues, with
+            the product's own result card layered over it so the visual says what
+            the product does rather than being decoration. */}
+        <div aria-hidden className="hero-art pointer-events-none">
+          <span className="hero-art-blob hero-art-blob-1" />
+          <span className="hero-art-blob hero-art-blob-2" />
+          <span className="hero-art-blob hero-art-blob-3" />
+        </div>
+
+        <div className="relative max-w-[1400px] mx-auto px-6 md:px-12 pt-4 pb-10 text-center lg:text-left">
+          <div className="lg:max-w-[58%]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 border border-border shadow-sm text-[11px] mono uppercase tracking-widest text-muted-foreground">
             <span className="size-1.5 rounded-full bg-destructive live-dot" />
             <span className="size-1.5 rounded-full bg-success" />
             <span className="size-1.5 rounded-full bg-primary" />
             India's compliance workspace · {count(allModules.length)} registration modules
           </div>
-          <h1 className="mt-4 text-5xl md:text-7xl lg:text-[5.5rem] font-display font-semibold tracking-[-0.03em] leading-[0.92]">
+          <h1 className="mt-4 text-[2.3rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] font-display font-semibold tracking-[-0.03em] leading-[0.98]">
             Start your{" "}
-            <span className="bg-clip-text text-transparent animated-gradient" style={{ backgroundImage: "linear-gradient(90deg, oklch(0.68 0.22 27), oklch(0.72 0.16 152) 50%, oklch(0.7 0.20 255), oklch(0.68 0.22 27))" }}>
+            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(120deg, oklch(0.62 0.20 255), oklch(0.52 0.20 262) 55%, oklch(0.46 0.19 268))" }}>
               business registration
             </span>
           </h1>
 
           {/* Search */}
-          <div className="mt-5 mx-auto w-full max-w-3xl px-2 sm:px-0">
-            <div className="mb-4 flex flex-wrap justify-center gap-2" role="radiogroup" aria-label="Business structure">
+          <div className="relative mt-5 mx-auto lg:mx-0 w-full max-w-3xl px-2 sm:px-0">
+            <div
+              aria-hidden
+              className="hero-search-glow pointer-events-none absolute left-1/2 top-[3.2rem] h-20 w-[85%] -translate-x-1/2 -translate-y-1/2"
+            />
+            <div className="mb-4 flex flex-wrap justify-center lg:justify-start gap-2" role="radiogroup" aria-label="Business structure">
               {STRUCTURE_FILTERS.map((f) => {
                 const active = structure === f.key;
                 return (
@@ -257,8 +298,8 @@ export function LandingHero() {
                     onClick={() => setStructure(f.key)}
                     className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border transition-all ${
                       active
-                        ? "bg-white text-primary border-white shadow-lg"
-                        : "bg-white/10 text-white/85 border-white/25 hover:bg-white/20"
+                        ? "bg-primary text-white border-primary shadow-brand"
+                        : "bg-white/70 text-foreground border-border hover:bg-white hover:border-primary/40"
                     }`}
                   >
                     {f.label}
@@ -273,23 +314,27 @@ export function LandingHero() {
               {/* Sweeping highlight — hidden once the field is in use. */}
               {!q && !checking && <span className="search-beam" />}
               
-              <div className="relative pl-5 pr-2 grid place-items-center shrink-0">
-                <Search className="size-5 text-muted-foreground" />
+              {/* Icon and field stay side by side on every width — stacking them
+                  left the magnifier floating on its own centred row. */}
+              <div className="relative flex flex-1 min-w-0 items-center">
+                <div className="pl-5 pr-2 grid place-items-center shrink-0">
+                  <Search className="size-5 text-muted-foreground" />
+                </div>
+
+                <input
+                  autoFocus
+                  disabled={checking}
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder="Enter your business name — e.g. Acme Tech"
+                  className="flex-1 min-w-0 py-4 pr-4 text-left text-foreground text-sm sm:text-base placeholder:text-muted-foreground bg-transparent focus:outline-none"
+                />
               </div>
-              
-              <input
-                autoFocus
-                disabled={checking}
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Enter your business name — e.g. Acme Tech"
-                className="relative flex-1 min-w-0 py-4 px-3 text-foreground text-sm sm:text-base placeholder:text-muted-foreground bg-transparent focus:outline-none"
-              />
 
                 <button
                   type="submit"
                   disabled={checking}
-                  className="group relative flex shrink-0 items-center justify-center gap-2 px-5 sm:px-7 min-w-[7.5rem] sm:min-w-[10rem] gradient-brand text-white font-semibold text-sm whitespace-nowrap hover:brightness-110 transition-all disabled:opacity-50"
+                  className="group relative flex w-full sm:w-auto shrink-0 items-center justify-center gap-2 py-3.5 sm:py-0 px-5 sm:px-7 sm:min-w-[10rem] gradient-brand text-white font-semibold text-sm whitespace-nowrap hover:brightness-110 transition-all disabled:opacity-50"
                 >
                   {checking ? (
                     <>
@@ -304,6 +349,23 @@ export function LandingHero() {
                   )}
                 </button>
             </form>
+
+            {/* What the search actually costs and covers, stated where the
+                decision is made. "Free" is the main objection this removes. */}
+            {!check && !checking && (
+              <ul className="mt-3.5 flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-1.5 text-[12.5px] text-muted-foreground">
+                {[
+                  "Free — no account needed",
+                  "27 lakh+ companies & LLPs",
+                  "Includes struck-off names",
+                ].map((t) => (
+                  <li key={t} className="flex items-center gap-1.5">
+                    <CheckCircle2 className="size-3.5 text-success shrink-0" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            )}
 
             {checking && <NameCheckProgress name={checkingName} />}
 
@@ -423,30 +485,102 @@ export function LandingHero() {
             )}
           </div>
 
-          <p className="mt-4 text-white/70 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
-            Search your name, upload documents once, and let Cloudcrest associates handle every
-            filing — MCA, GST, MSME, Trademark and more.
+          <p className="mt-5 text-muted-foreground text-base md:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            Check your name against the live MCA register, upload documents once, and let a CA or
+            CS handle every filing — MCA, GST, MSME, Trademark and more.
           </p>
 
+          </div>
+
+          {/* Product card over the artwork.
+              Razorpay layers real proof over its hero image rather than leaving
+              it decorative; this does the same with the thing the product
+              actually does — a name check, its verdict, and the registered
+              names it found nearby. Shown from lg only, where the artwork it
+              sits on also appears. */}
+          <div
+            aria-hidden
+            className="pointer-events-none hidden lg:block absolute right-12 top-1/2 w-[25rem] xl:w-[27rem] -translate-y-1/2"
+          >
+            <div className="rounded-2xl border border-white/60 bg-white/85 p-5 shadow-[0_32px_80px_-24px_oklch(0.25_0.09_262_/_0.45)] backdrop-blur-xl">
+              <div className="flex items-center gap-2.5 rounded-xl border border-border bg-background px-3.5 py-2.5">
+                <Search className="size-4 text-muted-foreground shrink-0" />
+                <span className="text-[13px] text-foreground truncate">Zephyrline Technologies</span>
+                <span className="ml-auto shrink-0 rounded-lg gradient-brand px-3 py-1.5 text-[11px] font-semibold text-white">
+                  Check
+                </span>
+              </div>
+
+              <div className="mt-3 flex items-center gap-2 rounded-xl border border-success/30 bg-success/5 px-3.5 py-2.5">
+                <CheckCircle2 className="size-4 shrink-0 text-success" />
+                <span className="text-[13px] font-semibold text-success">Name available</span>
+                <span className="ml-auto mono text-[10px] text-muted-foreground">0.4s</span>
+              </div>
+
+              <div className="mt-4 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                Similar registered names
+              </div>
+              <div className="mt-2 space-y-1.5">
+                {[
+                  { n: "ZEPHYR TECHNOLOGIES PRIVATE LIMITED", s: "Active" },
+                  { n: "ZEPHYRLINE SOLUTIONS LLP", s: "Active" },
+                  { n: "ZEPHYR LINE INDIA PRIVATE LIMITED", s: "Strike Off" },
+                ].map((r) => (
+                  <div
+                    key={r.n}
+                    className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2"
+                  >
+                    <span className="flex-1 truncate text-[11px] text-foreground">{r.n}</span>
+                    <span
+                      className={
+                        "shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide " +
+                        (r.s === "Active"
+                          ? "bg-success/15 text-success"
+                          : "bg-destructive/15 text-destructive")
+                      }
+                    >
+                      {r.s}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Offset chip, the way Razorpay hangs proof points off its hero card. */}
+            <div className="absolute -left-12 -bottom-7 rounded-xl border border-white/60 bg-white/90 px-4 py-3 shadow-[0_18px_44px_-14px_oklch(0.25_0.09_262_/_0.4)] backdrop-blur-xl">
+              <div className="text-[15px] font-display font-semibold tracking-tight">27 lakh+</div>
+              <div className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                Records searched
+              </div>
+            </div>
+          </div>
+
           {/* Oversized stat band */}
-          <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-4 border-t border-white/10 pt-5">
+          <div className="mt-7 grid grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-4 border-t border-border pt-6">
             {[
-              { n: "12,400+", l: "Businesses served" },
-              { n: "4.8/5", l: "Client rating" },
+              { n: "10+", l: "Years of expertise" },
+              { n: "100+", l: "Active clients" },
               { n: loading ? "—" : `${allModules.length}+`, l: "Registration modules" },
-              { n: "ISO 27001", l: "Secure filings" },
+              { n: "500+", l: "Completed jobs" },
             ].map((s) => (
               <div key={s.l}>
                 <div className="text-3xl md:text-4xl font-display font-semibold tracking-tight">{s.n}</div>
-                <div className="mt-1 text-[11px] mono uppercase tracking-widest text-white/50">{s.l}</div>
+                <div className="mt-1 text-[11px] mono uppercase tracking-widest text-muted-foreground">{s.l}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Services grid — cards float on a slowly flowing blue glow. */}
-      <section className="relative pt-8 md:pt-10 pb-20 md:pb-28">
+      <ProductDemo />
+
+      {/* Popular services.
+          The sidebar already lists all 55 services, so repeating the full
+          catalog here was the same content twice — and it made the page a
+          ~6,400px wall of identical cards. The home page now shows the handful
+          people actually arrive looking for and points at the sidebar for the
+          rest. */}
+      <section className="relative pt-14 md:pt-20 pb-16 md:pb-24">
         <div className="cards-blue-glow">
           <span className="cloud-1" />
           <span className="cloud-2" />
@@ -454,150 +588,89 @@ export function LandingHero() {
           <span className="cloud-4" />
           <span className="cards-sheen" />
         </div>
-        <div className="relative z-[1] max-w-[1600px] mx-auto px-6 md:px-12">
-        <div className="flex items-end justify-between gap-6 mb-12 border-b border-border pb-8">
-          <div>
+        <div className="relative z-[1] max-w-[1400px] mx-auto px-6 md:px-12">
+          <div className="max-w-2xl">
             <div className="label-eyebrow text-primary mb-2">Services</div>
-            <h2 className="text-3xl md:text-5xl font-display font-semibold tracking-[-0.02em] leading-[1.02] max-w-xl">
+            <h2 className="text-3xl md:text-5xl font-display font-semibold tracking-[-0.02em] leading-[1.04]">
               Everything you need to run a{" "}
               <span className="italic font-normal">compliant</span> business
             </h2>
-            <div className="mt-5 flex flex-wrap items-center gap-3">
-              {[
-                { i: ShieldCheck, t: "CA Verified", c: "text-primary" },
-                { i: Users, t: "Expert Advisors", c: "text-success" },
-                { i: Clock, t: "Timely Delivery", c: "text-[#7c3aed]" },
-              ].map((b) => (
-                <div
-                  key={b.t}
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3.5 py-1.5 text-sm font-medium text-foreground shadow-sm"
-                >
-                  <b.i className={"size-4 " + b.c} />
-                  {b.t}
-                </div>
-              ))}
-            </div>
+            <p className="mt-4 text-[15px] text-muted-foreground leading-relaxed">
+              The filings most businesses start with — open the menu for all{" "}
+              {loading ? "our" : `${allModules.length}`} registrations, renewals and closures.
+            </p>
           </div>
-          <span className="hidden md:block mono text-[11px] text-muted-foreground whitespace-nowrap pb-1">
-            {count(allModules.length)} services
-          </span>
-        </div>
 
-        <div className="space-y-10">
-          {loading
-            ? Array.from({ length: 2 }).map((_, gi) => (
-                <div key={gi}>
-                  <div className="mb-4 h-4 w-40 rounded bg-muted-foreground/15 animate-pulse" />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-                    {Array.from({ length: 6 }).map((_, ci) => (
-                      <div
-                        key={ci}
-                        className="min-h-[14.5rem] border border-border bg-surface p-6 animate-pulse"
-                      >
-                        <div className="size-11 rounded-xl bg-muted-foreground/15" />
-                        <div className="mt-5 h-4 w-2/3 rounded bg-muted-foreground/15" />
-                        <div className="mt-3 h-3 w-full rounded bg-muted-foreground/10" />
-                        <div className="mt-2 h-3 w-5/6 rounded bg-muted-foreground/10" />
-                      </div>
-                    ))}
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {popular.map((m, ci) => {
+              const Icon = m.icon;
+              return (
+                <button
+                  key={m.slug}
+                  onClick={() => openService(m.slug)}
+                  style={{ "--i": ci } as React.CSSProperties}
+                  className="card-in group relative flex flex-col min-h-[13rem] overflow-hidden rounded-2xl text-left border border-border bg-surface p-6 shadow-[0_4px_10px_-2px_oklch(0.2_0.04_260_/_0.1),0_18px_44px_-12px_oklch(0.2_0.04_260_/_0.18)] transition-all duration-300 hover:-translate-y-1.5 hover:border-primary hover:bg-navy hover:shadow-[0_28px_64px_-14px_oklch(0.24_0.08_260_/_0.75)]"
+                >
+                  <span
+                    className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      background:
+                        "radial-gradient(120% 90% at 0% 0%, oklch(0.55 0.20 255 / 0.4), transparent 55%)",
+                    }}
+                  />
+                  <div className="relative flex items-start justify-between gap-3">
+                    <div className="size-11 rounded-xl bg-primary/10 grid place-items-center text-primary transition-all duration-300 group-hover:gradient-brand group-hover:text-white group-hover:shadow-brand group-hover:scale-110">
+                      <Icon className="size-5" />
+                    </div>
+                    <ArrowRight className="size-4 text-muted-foreground transition-all duration-300 group-hover:text-white group-hover:translate-x-0.5" />
                   </div>
-                </div>
-              ))
-            : groups.map((g) => (
-            <div key={g.label}>
-              <div className="flex items-baseline justify-between mb-4">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-foreground">
-                  {g.label}
-                </h3>
-                <span className="mono text-[10px] text-muted-foreground">
-                  {g.items.length.toString().padStart(2, "0")} services
-                </span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-                {g.items.map((m, ci) => {
-                  const Icon = m.icon;
-                  return (
-                    <button
-                      key={m.slug}
-                      onClick={() => openService(m.slug)}
-                      style={{ "--i": ci } as React.CSSProperties}
-                      className="card-in group relative flex flex-col min-h-[14.5rem] overflow-hidden text-left border border-border bg-surface p-6 shadow-[0_4px_10px_-2px_oklch(0.2_0.04_260_/_0.1),0_18px_44px_-12px_oklch(0.2_0.04_260_/_0.18)] transition-all duration-300 hover:-translate-y-1.5 hover:border-primary hover:bg-navy hover:shadow-[0_28px_64px_-14px_oklch(0.24_0.08_260_/_0.75)]"
-                    >
-                      {/* Soft highlight that blooms on hover over the dark fill. */}
-                      <span
-                        className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{
-                          background:
-                            "radial-gradient(120% 90% at 0% 0%, oklch(0.55 0.20 255 / 0.4), transparent 55%)",
-                        }}
-                      />
-                      <div className="relative flex items-start justify-between gap-3">
-                        <div className="size-11 rounded-xl bg-primary/10 grid place-items-center text-primary transition-all duration-300 group-hover:gradient-brand group-hover:text-white group-hover:shadow-brand group-hover:scale-110">
-                          <Icon className="size-5" />
-                        </div>
-                        <ArrowRight className="size-4 text-muted-foreground transition-all duration-300 group-hover:text-white group-hover:translate-x-0.5" />
-                      </div>
-                      <div className="relative mt-5 text-[15px] font-display font-semibold tracking-[-0.01em] text-foreground transition-colors duration-300 group-hover:text-white">
-                        {m.title}
-                      </div>
-                      <div className="relative flex-1 mt-2 text-[13px] font-sans leading-relaxed text-muted-foreground transition-colors duration-300 group-hover:text-white/75">
-                        {describe(m.slug, m.title, m.short)}
-                      </div>
-                      {/* Turnaround + document count — admin-managed. Each chip
-                          shows only when its value is set (no hardcoded fallback). */}
-                      {(m.timelineDays || m.documentsCount != null) && (
-                        <div className="relative mt-3 flex flex-wrap items-center gap-2">
-                          {m.timelineDays && (
-                            <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground transition-colors duration-300 group-hover:border-white/15 group-hover:bg-white/10 group-hover:text-white/70">
-                              <Clock className="size-3.5" /> {m.timelineDays}
-                            </span>
-                          )}
-                          {m.documentsCount != null && (
-                            <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground transition-colors duration-300 group-hover:border-white/15 group-hover:bg-white/10 group-hover:text-white/70">
-                              <FileText className="size-3.5" /> {m.documentsCount} Documents
-                            </span>
-                          )}
-                        </div>
+                  <div className="relative mt-5 text-[16px] font-display font-semibold tracking-[-0.01em] text-foreground transition-colors duration-300 group-hover:text-white">
+                    {m.title}
+                  </div>
+                  <div className="relative flex-1 mt-2 text-[13px] font-sans leading-relaxed text-muted-foreground transition-colors duration-300 group-hover:text-white/75">
+                    {describe(m.slug, m.title, m.short)}
+                  </div>
+                  {(m.timelineDays || m.documentsCount != null) && (
+                    <div className="relative mt-4 flex flex-wrap items-center gap-2">
+                      {m.timelineDays && (
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-2.5 py-1 text-[11px] text-muted-foreground transition-colors group-hover:border-white/20 group-hover:bg-white/10 group-hover:text-white/80">
+                          <Clock className="size-3" />
+                          {m.timelineDays}
+                        </span>
                       )}
+                      {m.documentsCount != null && (
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-2.5 py-1 text-[11px] text-muted-foreground transition-colors group-hover:border-white/20 group-hover:bg-white/10 group-hover:text-white/80">
+                          <FileText className="size-3" />
+                          {m.documentsCount} Documents
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
 
-                      {/* Start Application CTA — slides up into view on hover. */}
-                      <div className="relative grid transition-all duration-300 grid-rows-[0fr] opacity-0 group-hover:grid-rows-[1fr] group-hover:opacity-100 group-hover:mt-4">
-                        <div className="overflow-hidden">
-                          <span className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg gradient-brand text-white text-xs font-semibold shadow-brand">
-                            Start Application <ArrowRight className="size-3.5" />
-                          </span>
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
+          {/* The rail is the full catalog, so this opens it rather than
+              navigating to yet another list. */}
+          <div className="mt-10 flex justify-center">
+            <button
+              type="button"
+              onClick={openSidebar}
+              className="group inline-flex items-center gap-2 rounded-full border border-border bg-surface px-6 py-3 text-[13.5px] font-semibold shadow-sm transition-colors hover:border-primary hover:text-primary"
+            >
+              View all {loading ? "" : `${allModules.length} `}services
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* Value strip */}
-      <section className="bg-navy text-navy-foreground">
-        <div className="max-w-6xl mx-auto px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { i: ShieldCheck, t: "Backed by compliance experts", d: "Every filing is reviewed by CA/CS professionals before submission." },
-            { i: Clock, t: "Transparent turnaround", d: "Track your application status in real time from application to certificate." },
-            { i: Sparkles, t: "One dashboard for everything", d: `Manage ${loading ? "all your" : `${allModules.length}+`} registrations, renewals and post-approval compliance in a single place.` },
-          ].map((f) => (
-            <div key={f.t} className="flex items-start gap-3">
-              <div className="size-9 rounded-lg bg-white/10 grid place-items-center text-primary shrink-0">
-                <f.i className="size-4" />
-              </div>
-              <div>
-                <div className="text-sm font-semibold">{f.t}</div>
-                <div className="text-[13px] text-navy-foreground/70 mt-1">{f.d}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <HomeAbout />
+      <RegistryScale />
+      <HomeFaq />
+      <HomeClients />
+      <HomeCta />
 
       {/* Sign-in required before starting a registration from the search. */}
       <SignInDialog

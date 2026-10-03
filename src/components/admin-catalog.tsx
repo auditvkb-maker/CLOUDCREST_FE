@@ -346,6 +346,34 @@ export function AdminCatalogPanel() {
                                   {svc.slug && (
                                     <span className="text-[10px] mono text-muted-foreground shrink-0">/{svc.slug}</span>
                                   )}
+                                  {/* Home-page shortlist. Only a listed, active
+                                      service can be featured — anything else
+                                      would be promoted to a page nobody can
+                                      reach. */}
+                                  {svc.active && svc.slug && (
+                                    <button
+                                      type="button"
+                                      onClick={async () => {
+                                        await call(`/services/${svc.id}`, "PUT", {
+                                          featured: !svc.featured,
+                                        });
+                                        refresh();
+                                      }}
+                                      title={
+                                        svc.featured
+                                          ? `"${svc.name}" is on the home page — click to remove it`
+                                          : `Feature "${svc.name}" on the home page`
+                                      }
+                                      className={
+                                        "shrink-0 rounded px-1.5 py-0.5 text-[9px] mono uppercase transition-colors " +
+                                        (svc.featured
+                                          ? "bg-primary text-white"
+                                          : "bg-muted text-muted-foreground hover:bg-primary/15 hover:text-primary")
+                                      }
+                                    >
+                                      {svc.featured ? "★ home" : "☆ home"}
+                                    </button>
+                                  )}
                                   <div className="flex items-center gap-1 shrink-0">
                                     {(isLauncher || (svc.slug && LAUNCHER_SLUGS.has(svc.slug))) && (
                                       <IconBtn

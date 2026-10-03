@@ -611,3 +611,91 @@
     cursor: not-allowed;
   }
 }
+
+/* Glow pooling under the search field, so the primary action has weight
+   without another border or shadow competing with the field itself. */
+@utility hero-search-glow {
+  background: radial-gradient(
+    ellipse 60% 140% at 50% 50%,
+    oklch(0.72 0.17 255 / 0.45),
+    transparent 70%
+  );
+  filter: blur(26px);
+}
+
+/* Hero artwork -------------------------------------------------------------
+   A single bold shape anchored to the right of the hero, in place of the faint
+   full-width wash that read as nothing at all. Three overlapping fields of the
+   brand blue, heavily blurred so they fuse into one flowing form.
+
+   Each animates transform only, so the layer stays on the compositor — the old
+   hero scene animated background-position and repainted every frame, which is
+   what made scrolling stutter. */
+@keyframes art-a { 0%,100% { transform: translate3d(0,0,0) scale(1) rotate(0deg); } 50% { transform: translate3d(-4%, 5%, 0) scale(1.1) rotate(8deg); } }
+@keyframes art-b { 0%,100% { transform: translate3d(0,0,0) scale(1.08) rotate(0deg); } 50% { transform: translate3d(5%, -6%, 0) scale(0.96) rotate(-10deg); } }
+
+@utility hero-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+@utility hero-art-blob {
+  position: absolute;
+  border-radius: 48% 52% 60% 40% / 45% 55% 45% 55%;
+  filter: blur(60px);
+  will-change: transform;
+}
+
+/* Sized and placed as one asymmetric mass on the right. Hidden below lg, where
+   the hero stacks and there is no right-hand space to fill. */
+.hero-art-blob-1,
+.hero-art-blob-2,
+.hero-art-blob-3 { display: none; }
+
+@media (min-width: 1024px) {
+  .hero-art-blob-1,
+  .hero-art-blob-2,
+  .hero-art-blob-3 { display: block; }
+
+  .hero-art-blob-1 {
+    width: 42%; height: 128%;
+    top: -16%; right: -6%;
+    background: linear-gradient(145deg, oklch(0.62 0.20 255 / 0.85), oklch(0.52 0.20 262 / 0.55));
+    animation: art-a 20s ease-in-out infinite;
+  }
+  .hero-art-blob-2 {
+    width: 30%; height: 95%;
+    top: 6%; right: 14%;
+    background: linear-gradient(200deg, oklch(0.70 0.17 250 / 0.55), oklch(0.46 0.19 268 / 0.40));
+    animation: art-b 26s ease-in-out infinite;
+  }
+  .hero-art-blob-3 {
+    width: 22%; height: 70%;
+    bottom: -12%; right: 30%;
+    background: linear-gradient(120deg, oklch(0.75 0.14 245 / 0.45), oklch(0.58 0.19 258 / 0.30));
+    animation: art-a 32s ease-in-out infinite reverse;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-art-blob { animation: none !important; }
+}
+
+/* Logo marquee -------------------------------------------------------------
+   The track holds two copies of the list and shifts by exactly -50%, so the
+   second copy arrives where the first started and the loop has no seam.
+   Transform only, so it stays on the compositor. */
+@keyframes logo-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@utility logo-marquee-track {
+  animation: logo-scroll linear infinite;
+  will-change: transform;
+}
+/* Pausing on hover lets someone actually read a logo they recognised. */
+.logo-marquee:hover .logo-marquee-track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-marquee-track { animation: none; flex-wrap: wrap; justify-content: center; }
+}

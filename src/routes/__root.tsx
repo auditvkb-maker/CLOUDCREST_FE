@@ -74,18 +74,88 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+/**
+ * Canonical origin for this site. Update when the custom domain goes live —
+ * `app.cloudcrest.in` — so Google does not index the Vercel URL and the real
+ * domain as two competing copies of the same pages.
+ */
+const SITE_URL = "https://cloudcrestwebsite.vercel.app";
+
+/**
+ * Structured data, so Google can show the business rather than just a link —
+ * name, address, phone and hours in the knowledge panel and local results.
+ * Every value here is one the firm already publishes on cloudcrest.in.
+ */
+const ORGANISATION_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "Cloudcrest Business Management",
+  url: SITE_URL,
+  image: `${SITE_URL}/favicon.png`,
+  description:
+    "Company, LLP, GST, MSME and trademark registration across India, with every filing reviewed by a Chartered Accountant or Company Secretary.",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Level 4, N Heights, Plot No 38, Phase 2, Siddiq Nagar, HITEC City",
+    addressLocality: "Hyderabad",
+    addressRegion: "Telangana",
+    postalCode: "500081",
+    addressCountry: "IN",
+  },
+  telephone: "+91-89770-79433",
+  email: "cloudcrestbm@gmail.com",
+  areaServed: "IN",
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    opens: "10:00",
+    closes: "19:00",
+  },
+  knowsAbout: [
+    "Private Limited Company Registration",
+    "LLP Registration",
+    "GST Registration",
+    "MSME Udyam Registration",
+    "Trademark Registration",
+    "Company Law Compliance",
+  ],
+};
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Cloudcrest BM — Business Registration & Compliance" },
-      { name: "description", content: "Enterprise compliance workspace for MCA, Tax, Labour, Municipal & IP registrations across India." },
-      { name: "author", content: "Cloudcrest BM" },
-      { property: "og:title", content: "Cloudcrest BM — Compliance Operations" },
-      { property: "og:description", content: "MCA, GST, Labour, Municipal & IP registration desk." },
+      // Written for what people actually type into Google — "company
+      // registration", "GST registration", a city — rather than for how the
+      // product describes itself internally. Google truncates around 155
+      // characters, so the useful words come first.
+      { title: "Company Registration, GST & Trademark Filing in India | Cloudcrest" },
+      {
+        name: "description",
+        content:
+          "Register a Private Limited Company, LLP, GST, MSME or trademark in India. Free MCA name check, documents uploaded once, every filing reviewed by a CA or CS. Hyderabad-based, serving all states.",
+      },
+      { name: "author", content: "Cloudcrest Business Management" },
+      { name: "robots", content: "index, follow" },
+
+      { property: "og:site_name", content: "Cloudcrest" },
+      { property: "og:title", content: "Company Registration, GST & Trademark Filing in India" },
+      {
+        property: "og:description",
+        content:
+          "Free MCA name check, then a CA or CS handles the filing end to end — company, LLP, GST, MSME, trademark and more.",
+      },
       { property: "og:type", content: "website" },
+      { property: "og:locale", content: "en_IN" },
+      { property: "og:url", content: SITE_URL },
+
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Company Registration, GST & Trademark Filing in India" },
+      {
+        name: "twitter:description",
+        content: "Free MCA name check, then a CA or CS handles the filing end to end.",
+      },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -96,6 +166,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "canonical", href: SITE_URL },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(ORGANISATION_JSONLD),
+      },
     ],
   }),
   shellComponent: RootShell,
