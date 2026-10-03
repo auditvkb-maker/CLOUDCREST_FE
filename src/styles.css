@@ -699,3 +699,32 @@
 @media (prefers-reduced-motion: reduce) {
   .logo-marquee-track { animation: none; flex-wrap: wrap; justify-content: center; }
 }
+
+/* Hero card float -----------------------------------------------------------
+   The product card and its stat chip drift on slightly different cycles, so
+   they read as two things suspended at different depths rather than one block
+   sliding about. Transform only, so it stays on the compositor.
+
+   The positioning translate lives on an outer element: animating transform
+   here would otherwise fight the -translate-y-1/2 that centres the card. */
+@keyframes hero-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -14px, 0); }
+}
+@keyframes hero-float-chip {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -9px, 0); }
+}
+@utility hero-float {
+  animation: hero-float 6.5s ease-in-out infinite;
+  will-change: transform;
+}
+@utility hero-float-chip {
+  animation: hero-float-chip 5.2s ease-in-out infinite;
+  animation-delay: -1.8s;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-float, .hero-float-chip { animation: none; }
+}

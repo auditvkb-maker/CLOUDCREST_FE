@@ -502,7 +502,7 @@ export function LandingHero() {
             aria-hidden
             className="pointer-events-none hidden lg:block absolute right-12 top-1/2 w-[25rem] xl:w-[27rem] -translate-y-1/2"
           >
-            <div className="rounded-2xl border border-white/60 bg-white/85 p-5 shadow-[0_32px_80px_-24px_oklch(0.25_0.09_262_/_0.45)] backdrop-blur-xl">
+            <div className="hero-float rounded-2xl border border-white/60 bg-white/85 p-5 shadow-[0_32px_80px_-24px_oklch(0.25_0.09_262_/_0.45)] backdrop-blur-xl">
               <div className="flex items-center gap-2.5 rounded-xl border border-border bg-background px-3.5 py-2.5">
                 <Search className="size-4 text-muted-foreground shrink-0" />
                 <span className="text-[13px] text-foreground truncate">Zephyrline Technologies</span>
@@ -547,7 +547,7 @@ export function LandingHero() {
             </div>
 
             {/* Offset chip, the way Razorpay hangs proof points off its hero card. */}
-            <div className="absolute -left-12 -bottom-7 rounded-xl border border-white/60 bg-white/90 px-4 py-3 shadow-[0_18px_44px_-14px_oklch(0.25_0.09_262_/_0.4)] backdrop-blur-xl">
+            <div className="hero-float-chip absolute -left-12 -bottom-7 rounded-xl border border-white/60 bg-white/90 px-4 py-3 shadow-[0_18px_44px_-14px_oklch(0.25_0.09_262_/_0.4)] backdrop-blur-xl">
               <div className="text-[15px] font-display font-semibold tracking-tight">27 lakh+</div>
               <div className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 Records searched

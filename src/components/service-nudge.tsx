@@ -14,8 +14,8 @@ import { useCatalogGroups } from "@/lib/service-catalog";
  * Does not mount under `prefers-reduced-motion`.
  */
 
-/** First appearance and the gap between them. Both easy to retune here. */
-const FIRST_RUN_MS = 10 * 60 * 1000;
+/** Shortly after arriving, then every ten minutes. Both easy to retune here. */
+const FIRST_RUN_MS = 6000;
 const REPEAT_MS = 10 * 60 * 1000;
 
 const SLIDE_IN_MS = 900;
@@ -23,6 +23,15 @@ const HOLD_MS = 7000;
 const SLIDE_OUT_MS = 700;
 
 const CURSOR_KEY = "cc-nudge-cursor";
+/**
+ * When the next appearance is due, as a timestamp.
+ *
+ * Without this the schedule restarted on every page load, so the ten-minute
+ * repeat only ever fired for someone who sat on one page for ten unbroken
+ * minutes — which is to say, almost nobody. Holding the due time in the session
+ * means the clock keeps running as the visitor moves around the site.
+ */
+const DUE_KEY = "cc-nudge-due";
 
 type Phase = "away" | "in" | "hold" | "out";
 
@@ -76,11 +85,42 @@ export function ServiceNudge() {
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
     if (reduced) return;
 
-    const first = setTimeout(run, FIRST_RUN_MS);
-    const repeat = setInterval(run, REPEAT_MS);
+    const readDue = () => {
+      try {
+        return Number(sessionStorage.getItem(DUE_KEY) || 0) || 0;
+      } catch {
+        return 0;
+      }
+    };
+    const writeDue = (at: number) => {
+      try {
+        sessionStorage.setItem(DUE_KEY, String(at));
+      } catch {
+        /* blocked storage: the schedule just restarts on the next page */
+      }
+    };
+
+    // First page of the session: book the opening appearance. Later pages pick
+    // up whatever was already booked, so navigating does not reset the wait.
+    let due = readDue();
+    if (!due) {
+      due = Date.now() + FIRST_RUN_MS;
+      writeDue(due);
+    }
+
+    let scheduled: ReturnType<typeof setTimeout>;
+    const schedule = () => {
+      const wait = Math.max(800, readDue() - Date.now());
+      scheduled = setTimeout(() => {
+        run();
+        writeDue(Date.now() + REPEAT_MS);
+        schedule();
+      }, wait);
+    };
+    schedule();
+
     return () => {
-      clearTimeout(first);
-      clearInterval(repeat);
+      clearTimeout(scheduled);
       timers.current.forEach(clearTimeout);
       timers.current = [];
     };
