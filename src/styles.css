@@ -5,6 +5,15 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Default easing for every `transition-*` utility.
+     Tailwind ships cubic-bezier(0.4, 0, 0.2, 1) — a symmetric ease-in-out that
+     accelerates away from the pointer before it moves, which is why stock
+     Tailwind hovers feel sluggish and generic. This is ease-out-quart: it
+     leaves immediately and settles softly, the curve Stripe uses on 453 of its
+     706 transitioning elements. One token, so every hover, menu and card on
+     the site picks it up. */
+  --default-transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -638,6 +647,13 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
+  /* Blob 1 is taller than the hero, so `overflow: hidden` sheared it off in a
+     straight line at the bottom edge and the hero read as a pasted-on band.
+     Fading the artwork out before it reaches that edge means there is nothing
+     left to cut, and the hero's own gradient (which now resolves to the next
+     section's white) carries the rest of the transition. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 92%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 92%);
 }
 @utility hero-art-blob {
   position: absolute;
@@ -801,4 +817,53 @@
 @media (prefers-reduced-motion: reduce) {
   .lift { transition: none; }
   .lift:hover { transform: none; }
+}
+
+/* Flowing dashes along the service-flow paths, and the pulse at its origin.
+   Both run on a small inline SVG: stroke-dashoffset is a paint rather than a
+   layout pass, so this stays cheap even though it never stops. */
+@keyframes flow-dash {
+  to { stroke-dashoffset: -28; }
+}
+.flow-dash {
+  animation: flow-dash 2s linear infinite;
+}
+
+@keyframes flow-pulse {
+  0%   { transform: scale(1);    opacity: 0.22; }
+  70%  { transform: scale(1.75); opacity: 0; }
+  100% { transform: scale(1.75); opacity: 0; }
+}
+.flow-pulse {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: flow-pulse 3s ease-out infinite;
+}
+
+/* A blinking caret beside the typed placeholder's field, so the typing reads
+   as typing rather than as text glitching. */
+@keyframes caret-blink {
+  0%, 45%  { opacity: 1; }
+  55%, 100% { opacity: 0; }
+}
+.caret-blink {
+  animation: caret-blink 1.1s steps(1, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-dash, .flow-pulse, .caret-blink { animation: none; }
+  .flow-pulse { opacity: 0; }
+}
+
+/* Labels inside the service-flow SVG.
+
+   Font size here is in user units, so it scales with the viewBox: the same
+   12px that reads correctly on a desktop renders at about 7px once the SVG is
+   squeezed into a phone column. Sizing it per breakpoint keeps the rendered
+   text legible at both ends. */
+.flow-label { font-size: 17px; }
+.flow-origin-label { font-size: 13px; }
+@media (min-width: 640px) {
+  .flow-label { font-size: 12.5px; }
+  .flow-origin-label { font-size: 11px; }
 }

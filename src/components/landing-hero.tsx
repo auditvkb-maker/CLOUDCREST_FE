@@ -1,4 +1,6 @@
 import { Reveal } from "@/components/reveal";
+import { ServiceFlow } from "@/components/service-flow";
+import { useTypedPlaceholder } from "@/lib/use-typed-placeholder";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useCatalogGroups } from "@/lib/service-catalog";
@@ -29,6 +31,15 @@ import {
 // the name check / similar-name calls pointed at the backend on the deployed
 // site instead of the frontend's own domain (which 404s).
 const BACKEND = (import.meta.env.VITE_BACKEND_URL || "").replace(/\/$/, "");
+
+// Names typed into the empty search field. Defined at module scope: a new
+// array each render would restart the typing effect every render.
+const EXAMPLE_NAMES = [
+  "Acme Technologies",
+  "Zephyrline Solutions",
+  "Vasathi Infra",
+  "Greenleaf Foods",
+];
 
 // The structure chips above the search bar (All / Private Limited / Public
 // Limited / OPC / LLP) say what the applicant intends to register. They never
@@ -112,7 +123,26 @@ export function LandingHero() {
     }
   }, []);
 
+  // The full sentence does not fit a phone, so the lead-in shortens while the
+  // typed example stays the same.
+  const [shortHint, setShortHint] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const sync = () => setShortHint(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   const [q, setQ] = useState("");
+  // A focused but empty field still shows its placeholder, so emptiness - not
+  // focus - decides whether the typing is worth running. Gating this on focus
+  // meant the desktop autofocus silenced it everywhere it would be seen, and
+  // the browser hides the placeholder the moment there is a value anyway.
+  const typedName = useTypedPlaceholder(EXAMPLE_NAMES, { active: q.length === 0 });
+  const placeholder = shortHint
+    ? `e.g. ${typedName}`
+    : `Enter your business name — e.g. ${typedName}`;
   const [checking, setChecking] = useState(false);
   // The structure the applicant intends to register — see the note at the top.
   const [structure, setStructure] = useState<StructureFilter>("all");
@@ -260,7 +290,7 @@ export function LandingHero() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[linear-gradient(180deg,oklch(0.99_0.004_250)_0%,oklch(0.96_0.018_250)_55%,oklch(0.93_0.03_250)_100%)] text-foreground">
+      <section className="relative overflow-hidden bg-[linear-gradient(180deg,oklch(0.99_0.004_250)_0%,oklch(0.955_0.022_250)_48%,oklch(0.945_0.026_250)_70%,oklch(0.975_0.012_250)_88%,oklch(1_0_0)_100%)] text-foreground">
         {/* Panning technical grid under the filing scene. */}
         <div className="hero-grid" />
 
@@ -373,7 +403,7 @@ export function LandingHero() {
                   disabled={checking}
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
-                  placeholder="Enter your business name — e.g. Acme Tech"
+                  placeholder={placeholder}
                   className="flex-1 min-w-0 py-4 pr-4 text-left text-foreground text-base placeholder:text-muted-foreground bg-transparent focus:outline-none"
                 />
               </div>
@@ -717,6 +747,7 @@ export function LandingHero() {
         </div>
       </section>
 
+      <ServiceFlow />
       <HomeAbout />
       <RegistryScale />
       <HomeFaq />

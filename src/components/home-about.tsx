@@ -43,56 +43,67 @@ export function HomeAbout() {
   return (
     <section className="border-b border-border bg-surface">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-14 md:py-20">
-        <div className="grid gap-10 lg:gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] items-start">
+        {/* About and the quotes used to sit in two columns, but the copy ran
+            out well before the third quote did, leaving a tall empty gap on the
+            left and three ragged cards on the right. Stacked, each gets the
+            full width it needs and the quotes line up as a row of equals. */}
+        <div className="grid gap-8 lg:gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] items-end">
           <Reveal className="reveal-left min-w-0">
             <div className="label-eyebrow text-primary mb-2">About us</div>
             <h2 className="text-3xl md:text-4xl font-display font-semibold tracking-[-0.02em] leading-[1.08]">
               A practice, not a portal
             </h2>
-            <p className="mt-5 text-[15px] text-muted-foreground leading-relaxed max-w-xl">
+            <p className="mt-5 text-[15px] text-muted-foreground leading-relaxed">
               Cloudcrest is a firm specialising in virtual accounting, payroll and taxation
               services. We deliver financial advisory that ensures full statutory compliance,
               prompt service and maximum client satisfaction — for businesses that would rather
               build than chase paperwork.
             </p>
-            <p className="mt-4 text-[15px] text-muted-foreground leading-relaxed max-w-xl">
+          </Reveal>
+
+          <Reveal className="reveal-right min-w-0" delay={100}>
+            <p className="text-[15px] text-muted-foreground leading-relaxed">
               The filings on this site are handled by that same team: incorporation, GST, payroll,
               audit and company law, with a Chartered Accountant or Company Secretary behind every
               submission.
             </p>
-
-            <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-5">
-              {FACTS.map((f) => (
-                <div key={f.label}>
-                  <span className="grid place-items-center size-9 rounded-lg bg-primary/10 text-primary">
-                    <f.icon className="size-4" />
-                  </span>
-                  <div className="mt-3 text-2xl font-display font-semibold tracking-tight">
-                    {f.figure}
-                  </div>
-                  <div className="mt-0.5 text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground leading-tight">
-                    {f.label}
-                  </div>
-                </div>
-              ))}
-            </div>
           </Reveal>
+        </div>
 
-          {/* Testimonials */}
-          <div className="min-w-0 space-y-4">
-            <div className="label-eyebrow text-primary">What clients say</div>
+        <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-6 border-y border-border py-8">
+          {FACTS.map((f, i) => (
+            <Reveal key={f.label} delay={i * 80}>
+              <span className="grid place-items-center size-9 rounded-lg bg-primary/10 text-primary">
+                <f.icon className="size-4" />
+              </span>
+              <div className="mt-3 text-2xl md:text-3xl font-display font-semibold tracking-tight">
+                {f.figure}
+              </div>
+              <div className="mt-0.5 text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground leading-tight">
+                {f.label}
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Testimonials */}
+        <div className="mt-12">
+          <div className="label-eyebrow text-primary">What clients say</div>
+          {/* items-stretch plus h-full: the three quotes differ in length, and
+              ragged card bottoms were half of why this section looked untidy. */}
+          <div className="mt-5 grid gap-5 md:grid-cols-3 items-stretch">
             {TESTIMONIALS.map((t, i) => (
               <Reveal
                 as="figure"
                 key={t.name}
-                delay={i * 130}
-                className="reveal-right lift rounded-2xl border border-border bg-card p-5 shadow-[0_10px_30px_-18px_oklch(0.25_0.09_262_/_0.5)]"
+                delay={i * 110}
+                className="reveal-scale lift flex h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-[0_10px_30px_-18px_oklch(0.25_0.09_262_/_0.5)]"
               >
-                <Quote className="size-4 text-primary/50" />
-                <blockquote className="mt-2.5 text-[13.5px] leading-relaxed text-foreground">
+                <Quote className="size-4 shrink-0 text-primary/50" />
+                <blockquote className="mt-3 flex-1 text-[13.5px] leading-relaxed text-foreground">
                   {t.quote}
                 </blockquote>
-                <figcaption className="mt-4 flex items-center gap-3">
+                <figcaption className="mt-5 flex items-center gap-3 border-t border-border pt-4">
                   <span className="grid place-items-center size-9 shrink-0 rounded-full gradient-brand text-white text-[13px] font-semibold">
                     {t.name.charAt(0)}
                   </span>
