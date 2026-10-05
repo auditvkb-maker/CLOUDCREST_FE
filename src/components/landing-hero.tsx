@@ -332,8 +332,17 @@ export function LandingHero() {
             <span className="rise-in inline-block" style={{ "--i": 1 } as React.CSSProperties}>
               Start your{" "}
             </span>
+            {/* `pb`/`-mb`: this span is painted entirely by its own background
+                (background-clip: text over transparent glyphs), and a
+                background only covers the element box. An inline box sizes that
+                to the font's metrics, but an inline-block — needed here because
+                transforms do not apply to inline elements — sizes it to
+                line-height, which is tighter than the font at leading-[0.98].
+                Descenders then fell outside the painted area and the "g" in
+                "registration" lost its tail. The padding extends the paint; the
+                negative margin keeps it out of the layout. */}
             <span
-              className="rise-in inline-block bg-clip-text text-transparent"
+              className="rise-in inline-block bg-clip-text pb-[0.18em] -mb-[0.18em] text-transparent"
               style={{
                 "--i": 2,
                 backgroundImage:
