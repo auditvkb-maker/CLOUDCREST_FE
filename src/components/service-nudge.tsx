@@ -14,9 +14,16 @@ import { useCatalogGroups } from "@/lib/service-catalog";
  * Does not mount under `prefers-reduced-motion`.
  */
 
-/** Shortly after arriving, then every ten minutes. Both easy to retune here. */
-const FIRST_RUN_MS = 6000;
-const REPEAT_MS = 10 * 60 * 1000;
+/** Shortly after arriving, then every five minutes. Both easy to retune here. */
+const FIRST_RUN_MS = 45 * 1000;
+const REPEAT_MS = 5 * 60 * 1000;
+
+/**
+ * How long to wait before trying again when there was nothing to suggest —
+ * usually the catalog request still being in flight. Short, because this is a
+ * retry rather than the next scheduled appearance.
+ */
+const RETRY_MS = 4000;
 
 const SLIDE_IN_MS = 900;
 const HOLD_MS = 7000;
@@ -44,10 +51,13 @@ export function ServiceNudge() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { groups } = useCatalogGroups();
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const [entered, setEntered] = useState(false);
 
   const run = useCallback(() => {
     const all = groups.flatMap((g) => g.items).filter((m) => m.slug);
-    if (all.length === 0) return;
+    // Catalog not here yet (or empty): report failure so the caller retries
+    // soon instead of booking the next appearance five minutes out.
+    if (all.length === 0) return false;
 
     // Walk the catalog in order, skipping the service already on screen.
     let cursor = 0;
@@ -70,14 +80,29 @@ export function ServiceNudge() {
         break;
       }
     }
-    if (!chosen) return;
+    if (!chosen) return false;
 
     setPick({ slug: chosen.slug, title: chosen.title, days: chosen.timelineDays });
     setPhase("in");
     timers.current.push(setTimeout(() => setPhase("hold"), SLIDE_IN_MS));
     timers.current.push(setTimeout(() => setPhase("out"), SLIDE_IN_MS + HOLD_MS));
     timers.current.push(setTimeout(() => setPhase("away"), SLIDE_IN_MS + HOLD_MS + SLIDE_OUT_MS));
+    return true;
   }, [groups, pathname]);
+
+  /**
+   * Kept in a ref so the scheduling effect below can depend on nothing.
+   *
+   * `run` changes identity on every navigation (it reads `pathname` to avoid
+   * suggesting the service already on screen). With `run` in the effect's
+   * dependencies, every navigation tore the schedule down and rebuilt it — and
+   * the cleanup also cancelled the phase timers, so navigating while the nudge
+   * was on screen left it stuck there.
+   */
+  const runRef = useRef(run);
+  useEffect(() => {
+    runRef.current = run;
+  }, [run]);
 
   useEffect(() => {
     const reduced =
@@ -112,23 +137,46 @@ export function ServiceNudge() {
     const schedule = () => {
       const wait = Math.max(800, readDue() - Date.now());
       scheduled = setTimeout(() => {
-        run();
-        writeDue(Date.now() + REPEAT_MS);
+        // Only book the next appearance if this one actually happened. The
+        // previous version advanced the clock either way, so a catalog that
+        // had not arrived by the time the first timer fired pushed the nudge
+        // a full repeat interval into the future — which, on a fresh visit,
+        // meant it never appeared at all.
+        const shown = runRef.current();
+        writeDue(Date.now() + (shown ? REPEAT_MS : RETRY_MS));
         schedule();
       }, wait);
     };
     schedule();
 
+    return () => clearTimeout(scheduled);
+  }, []);
+
+  // Flip to the on-screen transform one frame after the panel mounts.
+  useEffect(() => {
+    if (phase !== "in") {
+      setEntered(false);
+      return;
+    }
+    const id = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(id);
+  }, [phase]);
+
+  // Phase timers are cancelled only when the component truly goes away.
+  useEffect(() => {
+    const pending = timers.current;
     return () => {
-      clearTimeout(scheduled);
-      timers.current.forEach(clearTimeout);
-      timers.current = [];
+      pending.forEach(clearTimeout);
     };
-  }, [run]);
+  }, []);
 
   if (phase === "away" || !pick) return null;
 
-  const showing = phase === "in" || phase === "hold";
+  // `entered` lags `phase` by a frame on purpose. The element is created at the
+  // moment the phase becomes "in", and a node that mounts already at its final
+  // transform has nothing to animate from — it simply appeared. Mounting
+  // off-screen and flipping on the next frame is what makes it slide.
+  const showing = (phase === "in" && entered) || phase === "hold";
 
   return (
     <div

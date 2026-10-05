@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/reveal";
 import { useCatalogGroups } from "@/lib/service-catalog";
 
@@ -27,6 +28,29 @@ import { useCatalogGroups } from "@/lib/service-catalog";
 const ORIGIN = { x: 150, y: 189 };
 const END_X = 360;
 const VIEW_H = 378;
+const VIEW_W = 560;
+
+/** Pill geometry: the rect opens 8px before the dot, the label starts 34px in. */
+const PILL_X = END_X - 8;
+const LABEL_X = END_X + 26;
+const PILL_PAD_RIGHT = 18;
+const PILL_MIN_W = 150;
+
+/**
+ * Width of a pill around a label of `textW`, keeping the label clear of the
+ * 16px corner radius at the closing end.
+ */
+function pillWidth(textW: number) {
+  return Math.max(PILL_MIN_W, LABEL_X - PILL_X + textW + PILL_PAD_RIGHT);
+}
+
+/**
+ * Rough width before the real glyphs can be measured, so the first paint and
+ * the server-rendered markup are not wildly wrong.
+ */
+function estimate(label: string, fontPx: number) {
+  return label.length * fontPx * 0.52;
+}
 
 /** Fits however many groups the catalog returns into the drawing's height. */
 function layout(count: number) {
@@ -50,6 +74,49 @@ export function ServiceFlow() {
   // entirely whenever the backend was slow or unreachable.
   const ready = families.length > 0;
 
+  /**
+   * Measure the rendered labels and size each pill to its own.
+   *
+   * The width used to be a hardcoded 196, but these labels are category names
+   * out of the database: "Other Business Registrations" already overran the
+   * pill's rounded corner, and renaming a group or adding one would break it
+   * again. `.flow-label` is also 17px below 640px and 12.5px above it, so the
+   * measurement has to be redone when that breakpoint is crossed.
+   */
+  const textRefs = useRef<(SVGTextElement | null)[]>([]);
+  const [widths, setWidths] = useState<number[]>([]);
+
+  const measure = useCallback(() => {
+    const next = families.map((g, i) => {
+      const el = textRefs.current[i];
+      if (!el?.getComputedTextLength) return estimate(g.label, 17);
+      try {
+        return el.getComputedTextLength();
+      } catch {
+        return estimate(g.label, 17);
+      }
+    });
+    setWidths((prev) =>
+      prev.length === next.length && prev.every((w, i) => Math.abs(w - next[i]) < 0.5) ? prev : next,
+    );
+  }, [families]);
+
+  useEffect(() => {
+    if (!ready) return;
+    measure();
+    window.addEventListener("resize", measure);
+    // Re-measure once the webfont swaps in; fallback metrics differ enough to
+    // leave the pills visibly mis-sized.
+    void document.fonts?.ready.then(measure).catch(() => {});
+    return () => window.removeEventListener("resize", measure);
+  }, [ready, measure]);
+
+  const pillWidths = families.map((g, i) =>
+    pillWidth(widths[i] ?? estimate(g.label, 17)),
+  );
+  // Grow the canvas rather than let a long label spill out of it.
+  const viewW = Math.max(VIEW_W, PILL_X + Math.max(0, ...pillWidths) + 6);
+
   return (
     <section className="border-b border-border bg-surface">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-14 md:py-20">
@@ -69,7 +136,7 @@ export function ServiceFlow() {
           <Reveal className="reveal-right min-w-0" delay={120}>
             {ready && (
               <svg
-                viewBox={`0 0 560 ${VIEW_H}`}
+                viewBox={`0 0 ${viewW} ${VIEW_H}`}
                 className="w-full h-auto"
                 role="img"
                 aria-label={`Cloudcrest connects to ${families.map((g) => g.label).join(", ")}`}
@@ -121,16 +188,23 @@ export function ServiceFlow() {
                 {families.map((g, i) => (
                   <g key={g.label}>
                     <rect
-                      x={END_X - 8}
+                      x={PILL_X}
                       y={ys[i] - 16}
                       rx="16"
-                      width="196"
+                      width={pillWidths[i]}
                       height="32"
                       fill="var(--background)"
                       stroke="var(--border)"
                     />
                     <circle cx={END_X + 12} cy={ys[i]} r="4" fill="var(--primary)" />
-                    <text x={END_X + 26} y={ys[i] + 4} className="flow-label fill-[var(--foreground)]">
+                    <text
+                      ref={(el) => {
+                        textRefs.current[i] = el;
+                      }}
+                      x={LABEL_X}
+                      y={ys[i] + 4}
+                      className="flow-label fill-[var(--foreground)]"
+                    >
                       {g.label}
                     </text>
                   </g>
