@@ -44,10 +44,14 @@ export function Reveal({
       return;
     }
 
-    // Already on screen at mount (above the fold): show it without hiding it
-    // first, so the top of the page does not flash empty on load.
+    // Already on screen at mount, or already scrolled past: show it without
+    // hiding it first, so the top of the page does not flash empty on load and
+    // a restored scroll position does not leave the content above invisible.
+    // `innerHeight` can be 0 in an embedded or offscreen view, which would make
+    // every element look like it is below the fold, so fall back to clientHeight.
+    const viewportH = window.innerHeight || document.documentElement.clientHeight;
     const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight * 0.9) {
+    if (rect.top < viewportH * 0.9) {
       setState("shown");
       return;
     }
@@ -56,7 +60,11 @@ export function Reveal({
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
+          // Intersecting, or already above the viewport. An element that has
+          // scrolled past the top will never intersect again, so without the
+          // second test it would stay at opacity 0 permanently — which is how
+          // a fast scroll, or landing mid-page, could blank out a heading.
+          if (entry.isIntersecting || entry.boundingClientRect.bottom <= 0) {
             setState("shown");
             observer.unobserve(entry.target);
           }

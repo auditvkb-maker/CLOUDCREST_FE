@@ -1,4 +1,4 @@
-import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { SiteFooter } from "@/components/site-footer";
 import { ServiceNudge } from "@/components/service-nudge";
 import { Phone, Mail, Search, Bell, ChevronRight, ChevronDown, User, LogIn, LogOut, FileText, Receipt, Settings as SettingsIcon, ShieldAlert, LifeBuoy, FolderTree, Users, Menu, X, ExternalLink } from "lucide-react";
@@ -124,60 +124,6 @@ export default function AppShell({ children }: { children?: ReactNode }) {
     return cancelAutoCollapse;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  /**
-   * Take the visitor to the About section on the home page.
-   *
-   * No fragment in the href. A hash raced the page: the browser jumped to the
-   * anchor while the sections below the fold were still arriving and changing
-   * height, so it landed well past the heading, and from another route it did
-   * not scroll at all, having already rendered by the time the hash was read.
-   * The link points at the home page and this handler does the scrolling, so
-   * no `#about` is shown on hover or left in the address bar.
-   */
-  const navigate = useNavigate();
-  const goToAbout = (e: React.MouseEvent) => {
-    e.preventDefault();
-    closeSidebarOnMobile();
-    const scrollToAbout = () => {
-      const el = document.getElementById("about");
-      if (!el) return;
-      // Clear the sticky header, which would otherwise cover the heading.
-      const top = el.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({ top, behavior: "smooth" });
-      // Smooth scrolling is not honoured everywhere — in some embedded browsers
-      // it is simply a no-op, which would leave this link doing nothing at all.
-      // Check where we actually landed and jump if the animation never ran.
-      window.setTimeout(() => {
-        // Recomputed, not reused: the home page is still growing as its images
-        // and revealed sections arrive, so the offset measured a moment ago is
-        // already out of date.
-        const settled = document.getElementById("about");
-        if (!settled) return;
-        const corrected = settled.getBoundingClientRect().top + window.scrollY - 80;
-        if (Math.abs(window.scrollY - corrected) > 40) window.scrollTo(0, corrected);
-      }, 700);
-    };
-    if (pathname === "/") {
-      scrollToAbout();
-      return;
-    }
-    void navigate({ to: "/" }).then(() => {
-      // Arriving from another route the home page has to mount before there is
-      // anything to scroll to, and two frames was not enough. Wait for the
-      // section to exist, then scroll; scrollToAbout corrects itself afterwards
-      // once the page stops growing.
-      let tries = 0;
-      const whenReady = () => {
-        if (document.getElementById("about")) {
-          scrollToAbout();
-        } else if (tries++ < 40) {
-          window.setTimeout(whenReady, 50);
-        }
-      };
-      whenReady();
-    });
-  };
 
   // On phones the sidebar overlays the page, so hide it once a service is picked.
   const closeSidebarOnMobile = () => {
@@ -416,13 +362,12 @@ export default function AppShell({ children }: { children?: ReactNode }) {
             >
               Services
             </button>
-            <a
-              href="/"
-              onClick={goToAbout}
+            <Link
+              to="/about"
               className="px-2.5 py-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors shrink-0"
             >
               About
-            </a>
+            </Link>
             <Link
               to="/team"
               className="px-2.5 py-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors shrink-0"
@@ -500,13 +445,13 @@ export default function AppShell({ children }: { children?: ReactNode }) {
             >
               Home
             </Link>
-            <a
-              href="/"
-              onClick={goToAbout}
+            <Link
+              to="/about"
+              onClick={closeSidebarOnMobile}
               className="px-2.5 py-1.5 rounded-lg text-[13px] font-medium text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors"
             >
               About
-            </a>
+            </Link>
             <Link
               to="/team"
               onClick={closeSidebarOnMobile}
