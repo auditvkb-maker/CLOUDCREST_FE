@@ -41,7 +41,9 @@ const TESTIMONIALS = [
 
 export function HomeAbout() {
   return (
-    <section className="border-b border-border bg-surface">
+    // `scroll-mt` clears the sticky header so the heading is not hidden under
+    // it when the About link jumps here.
+    <section id="about" className="scroll-mt-20 border-b border-border bg-surface">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-14 md:py-20">
         {/* About and the quotes used to sit in two columns, but the copy ran
             out well before the third quote did, leaving a tall empty gap on the

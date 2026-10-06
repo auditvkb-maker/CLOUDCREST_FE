@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/reveal";
 import oxygenta from "@/assets/clients/oxygenta-pharmaceuticals.png";
 import vista from "@/assets/clients/vista-pharmaceuticals.png";
 import pascalcase from "@/assets/clients/pascalcase-software.png";
@@ -14,28 +15,14 @@ import sanchi from "@/assets/clients/sanchi-educational.png";
 import prajay from "@/assets/clients/prajay-megapolis.png";
 import vasathi from "@/assets/clients/vasathi-anandi.png";
 
-import tally from "@/assets/software/tally-prime.svg";
-import quickbooks from "@/assets/software/quickbooks.svg";
-import zoho from "@/assets/software/zoho.svg";
-import xero from "@/assets/software/xero.svg";
-import sap from "@/assets/software/sap.svg";
-import odoo from "@/assets/software/odoo.svg";
-import freshbooks from "@/assets/software/freshbooks.svg";
-import margErp from "@/assets/software/marg-erp.svg";
-import wave from "@/assets/software/wave.svg";
-import vyapar from "@/assets/software/vyapar.svg";
-import microsoft from "@/assets/software/microsoft.svg";
-import mygate from "@/assets/software/mygate.svg";
-import { Reveal } from "@/components/reveal";
-
 /**
- * Client and software logo marquees.
+ * Client logo marquee.
  *
- * Both sets come from the firm's own site, downloaded into the repo rather than
- * hotlinked: the client files there carry build hashes in their names
+ * The logos come from the firm's own site, downloaded into the repo rather than
+ * hotlinked: the files there carry build hashes in their names
  * (`Celzene…-YNURZaGm.png`) and would 404 the next time that site is rebuilt.
  *
- * Each track renders its list twice and translates by exactly -50%, so the
+ * The track renders its list twice and translates by exactly -50%, so the
  * second copy lands where the first began and the loop is seamless. Transform
  * only, so it stays on the compositor, and it stops on hover and under
  * `prefers-reduced-motion`.
@@ -59,20 +46,6 @@ const CLIENTS = [
   { src: vasathi, name: "Vasathi Anandi" },
 ];
 
-const SOFTWARE = [
-  { src: tally, name: "Tally Prime" },
-  { src: quickbooks, name: "QuickBooks" },
-  { src: zoho, name: "Zoho" },
-  { src: xero, name: "Xero" },
-  { src: sap, name: "SAP" },
-  { src: odoo, name: "Odoo" },
-  { src: freshbooks, name: "FreshBooks" },
-  { src: margErp, name: "Marg ERP" },
-  { src: wave, name: "Wave" },
-  { src: vyapar, name: "Vyapar" },
-  { src: microsoft, name: "Microsoft" },
-  { src: mygate, name: "Mygate" },
-];
 
 function Marquee({
   items,
@@ -126,7 +99,7 @@ export function HomeClients() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <Reveal className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
             <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-              Trusted by businesses across Hyderabad and beyond
+              Trusted by businesses across India
             </h2>
             <span className="mono text-[11px] text-muted-foreground/70">
               Pharma · Software · Healthcare · Education · Housing
@@ -138,17 +111,6 @@ export function HomeClients() {
           <Marquee items={CLIENTS} seconds={58} height="h-11 md:h-12" />
         </div>
 
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 mt-12">
-          <Reveal className="border-t border-border pt-8">
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-              We work in the books you already keep
-            </h2>
-          </Reveal>
-        </div>
-
-        <div className="mt-7">
-          <Marquee items={SOFTWARE} seconds={44} reverse height="h-7 md:h-8" />
-        </div>
       </div>
     </section>
   );

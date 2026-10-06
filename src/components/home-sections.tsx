@@ -1,6 +1,9 @@
+import { useEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/reveal";
 import { Link } from "@tanstack/react-router";
-import { Database, ShieldAlert, Gavel, ArrowRight, Phone } from "lucide-react";
+import {
+  Database, ShieldAlert, Gavel, ArrowRight, Phone, Receipt, LineChart, Users, ExternalLink,
+} from "lucide-react";
 import {
   Accordion, AccordionItem, AccordionTrigger, AccordionContent,
 } from "@/components/ui/accordion";
@@ -113,6 +116,21 @@ const FAQS = [
 ];
 
 export function HomeFaq() {
+  /**
+   * Which answer is open. Controlled rather than left to the accordion so that
+   * pointing at a question opens it, the way the service rail opens a category
+   * on hover — one interaction model across the page.
+   *
+   * Hover-to-open applies only where there is a real pointer. On a touch screen
+   * `:hover` sticks after a tap, so driving this from hover there would fight
+   * the tap that already works.
+   */
+  const [open, setOpen] = useState<string | undefined>(undefined);
+  const hoverCapable = useRef(false);
+  useEffect(() => {
+    hoverCapable.current = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  }, []);
+
   return (
     <section className="border-b border-border bg-surface">
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-14 md:py-20">
@@ -136,9 +154,22 @@ export function HomeFaq() {
           </Reveal>
 
           <Reveal className="reveal-right min-w-0" delay={120}>
-            <Accordion type="single" collapsible className="w-full">
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full"
+              value={open}
+              onValueChange={setOpen}
+            >
             {FAQS.map((f, i) => (
-              <AccordionItem key={f.q} value={`faq-${i}`} className="border-border">
+              <AccordionItem
+                key={f.q}
+                value={`faq-${i}`}
+                className="border-border"
+                onMouseEnter={() => {
+                  if (hoverCapable.current) setOpen(`faq-${i}`);
+                }}
+              >
                 <AccordionTrigger className="text-left text-[15px] font-semibold hover:no-underline">
                   {f.q}
                 </AccordionTrigger>
@@ -150,6 +181,88 @@ export function HomeFaq() {
             </Accordion>
           </Reveal>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * What happens once the registration is done.
+ *
+ * Incorporation is the start of the relationship, not the end of it: the same
+ * firm does the monthly bookkeeping, filings and reporting afterwards. That
+ * work lives on the practice's own site rather than in this app, so both links
+ * leave for cloudcrest.in rather than pretending the flow continues here.
+ */
+export function AfterRegistration() {
+  const STEPS = [
+    {
+      icon: Receipt,
+      title: "Monthly bookkeeping",
+      body: "Sales, purchases and bank entries recorded every month, in the software you already use.",
+    },
+    {
+      icon: Gavel,
+      title: "Statutory filings",
+      body: "GST, TDS and payroll returns filed on time, with the due dates tracked for you.",
+    },
+    {
+      icon: LineChart,
+      title: "Reports you can act on",
+      body: "Monthly statements and management reports, so you know where the business stands.",
+    },
+  ];
+
+  return (
+    <section className="border-b border-border bg-background">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-14 md:py-20">
+        <Reveal className="max-w-2xl">
+          <div className="label-eyebrow text-primary mb-2">After registration</div>
+          <h2 className="text-3xl md:text-4xl font-display font-semibold tracking-[-0.02em] leading-[1.08]">
+            Registered is the start, not the finish
+          </h2>
+          <p className="mt-4 text-[15px] text-muted-foreground leading-relaxed">
+            Once you are registered we stay on, handling the monthly compliance that follows —
+            from recording the books through to the reports you run the business on.
+          </p>
+        </Reveal>
+
+        <div className="mt-10 grid gap-6 md:gap-8 sm:grid-cols-3">
+          {STEPS.map((s, i) => (
+            <Reveal
+              key={s.title}
+              delay={i * 110}
+              className="reveal-scale lift rounded-2xl border border-border bg-surface p-6"
+            >
+              <span className="grid place-items-center size-10 rounded-xl bg-primary/10 text-primary">
+                <s.icon className="size-5" />
+              </span>
+              <div className="mt-5 text-[16px] font-display font-semibold tracking-[-0.01em]">
+                {s.title}
+              </div>
+              <p className="mt-2 text-[13.5px] text-muted-foreground leading-relaxed">{s.body}</p>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal className="mt-10 flex flex-wrap items-center gap-3" delay={140}>
+          <a
+            href="https://cloudcrest.in"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl gradient-brand px-6 py-3.5 text-sm font-semibold text-white shadow-brand transition-transform hover:-translate-y-0.5"
+          >
+            See our compliance services
+            <ExternalLink className="size-4" />
+          </a>
+          <Link
+            to="/team"
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface px-6 py-3.5 text-sm font-semibold transition-colors hover:border-primary hover:text-primary"
+          >
+            <Users className="size-4" />
+            Meet the team
+          </Link>
+        </Reveal>
       </div>
     </section>
   );

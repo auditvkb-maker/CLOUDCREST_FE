@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { SignInDialog } from "@/components/sign-in-dialog";
 import { useSidebarControl } from "@/components/app-shell";
 import { ProductDemo } from "@/components/product-demo";
-import { RegistryScale, HomeFaq, HomeCta } from "@/components/home-sections";
+import { RegistryScale, HomeFaq, HomeCta, AfterRegistration } from "@/components/home-sections";
 import { HomeAbout } from "@/components/home-about";
 import { HomeClients } from "@/components/home-clients";
 import {
@@ -571,7 +571,10 @@ export function LandingHero() {
             )}
           </div>
 
-          <p className="mt-4 sm:mt-5 text-muted-foreground text-[15px] sm:text-base md:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
+          {/* Set in the display serif and centred under the search field rather
+              than ranged left with the headline: it is a caption for the search,
+              not a continuation of the headline, and centring separates the two. */}
+          <p className="mt-4 sm:mt-5 font-display text-foreground/80 text-[16.5px] sm:text-[18px] md:text-[20px] max-w-xl mx-auto text-center leading-[1.55] tracking-[-0.005em]">
             Check your name against the live MCA register, upload documents once, and let a CA or
             CS handle every filing — MCA, GST, MSME, Trademark and more.
           </p>
@@ -758,6 +761,7 @@ export function LandingHero() {
 
       <ServiceFlow />
       <HomeAbout />
+      <AfterRegistration />
       <RegistryScale />
       <HomeFaq />
       <HomeClients />

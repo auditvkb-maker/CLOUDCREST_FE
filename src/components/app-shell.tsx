@@ -1,7 +1,7 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { SiteFooter } from "@/components/site-footer";
 import { ServiceNudge } from "@/components/service-nudge";
-import { Phone, Mail, Search, Bell, ChevronRight, ChevronDown, User, LogIn, LogOut, FileText, Receipt, Settings as SettingsIcon, ShieldAlert, LifeBuoy, FolderTree, Users, Menu, X } from "lucide-react";
+import { Phone, Mail, Search, Bell, ChevronRight, ChevronDown, User, LogIn, LogOut, FileText, Receipt, Settings as SettingsIcon, ShieldAlert, LifeBuoy, FolderTree, Users, Menu, X, ExternalLink } from "lucide-react";
 import { useCatalogGroups } from "@/lib/service-catalog";
 import { SupportFab } from "@/components/support-fab";
 import { useState, useRef, useEffect, createContext, useContext, type ReactNode } from "react";
@@ -55,6 +55,23 @@ export default function AppShell({ children }: { children?: ReactNode }) {
   const autoCollapseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /**
+   * The sidebar element, so the greeting can ask whether the pointer is over it
+   * at the moment it falls due.
+   *
+   * `onMouseEnter`/`onMouseMove` used to cancel the greeting outright, so a
+   * visitor whose cursor merely happened to rest on the left of the screen as
+   * the page loaded never saw the sidebar fold away at all. Hovering is not a
+   * decision, so presence now only *defers* the collapse; clicking, typing,
+   * scrolling or focusing still cancels it for good.
+   *
+   * Deliberately `:hover` rather than a flag kept by enter/leave handlers: the
+   * sidebar expands underneath a stationary cursor, and a pointer that never
+   * moves may produce no `mouseenter` at all. `:hover` is the browser's own
+   * answer and does not depend on an event being delivered.
+   */
+  const asideRef = useRef<HTMLElement | null>(null);
+
+  /**
    * Drop the opening timer. Called by every manual open/close: once someone has
    * expressed a preference, a timer set before they touched anything must not
    * overrule it — otherwise the sidebar they just opened snaps shut under them.
@@ -65,6 +82,8 @@ export default function AppShell({ children }: { children?: ReactNode }) {
       autoCollapseTimer.current = null;
     }
   };
+
+
 
   /** Manual toggle: cancels the greeting, then flips the sidebar. */
   const toggleSidebar = () => {
@@ -91,8 +110,15 @@ export default function AppShell({ children }: { children?: ReactNode }) {
 
     setSidebarCollapsed(false);
     autoCollapseTimer.current = setTimeout(() => {
-      setSidebarCollapsed(true);
       autoCollapseTimer.current = null;
+      const el = asideRef.current;
+      // Never fold the panel away under the pointer that is reading it; wait
+      // for that pointer to leave, then collapse.
+      if (el?.matches(":hover")) {
+        el.addEventListener("mouseleave", () => setSidebarCollapsed(true), { once: true });
+        return;
+      }
+      setSidebarCollapsed(true);
     }, AUTO_COLLAPSE_MS);
 
     return cancelAutoCollapse;
@@ -139,6 +165,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
 
   const toggleGroup = (label: string) => {
     cancelAutoCollapse();
+    commitHoverOpen();
     setOpenGroups((prev) => {
       const isCurrentlyOpen = !!prev[label];
       const next: Record<string, boolean> = {};
@@ -162,13 +189,50 @@ export default function AppShell({ children }: { children?: ReactNode }) {
       hoverTimer.current = null;
     }
   };
+  /**
+   * What was open before hovering started, so leaving can put it back.
+   *
+   * Hovering is a look, not a decision: a category the pointer merely passed
+   * over should not stay expanded once the pointer has gone, and whatever was
+   * open before should return. A click commits, and survives the pointer
+   * leaving.
+   */
+  const preHoverState = useRef<Record<string, boolean> | null>(null);
+
   const hoverOpenGroup = (label: string) => {
     cancelHoverOpen();
     hoverTimer.current = setTimeout(() => {
-      cancelAutoCollapse();
-      openOnly(label);
+      setOpenGroups((prev) => {
+        if (preHoverState.current === null) preHoverState.current = prev;
+        const next: Record<string, boolean> = {};
+        groups.forEach((g) => {
+          next[g.label] = false;
+        });
+        next[label] = true;
+        return next;
+      });
     }, 140);
   };
+
+  /**
+   * Pointer has left the group — heading and its services together, which is
+   * why this sits on the wrapper. On the heading alone it would fire the moment
+   * the pointer moved down into the list it had just opened.
+   */
+  const hoverCloseGroup = () => {
+    cancelHoverOpen();
+    const restore = preHoverState.current;
+    if (restore) {
+      preHoverState.current = null;
+      setOpenGroups(restore);
+    }
+  };
+
+  /** A click or a navigation is deliberate: keep it when the pointer leaves. */
+  function commitHoverOpen() {
+    preHoverState.current = null;
+  }
+
   useEffect(() => cancelHoverOpen, []);
 
   const filteredGroups = groups.map((g) => {
@@ -267,24 +331,54 @@ export default function AppShell({ children }: { children?: ReactNode }) {
             );
           })()}
 
-          <nav className="hidden md:flex items-center text-[13px] gap-1.5 min-w-0">
+          {/* Primary navigation.
+              This was a breadcrumb ("Workspace > Registration & Compliance"),
+              which named where you were but offered nowhere to go — on the home
+              page it read as a label rather than navigation. These are the
+              destinations instead. Services opens the catalog rail, which is
+              the real index of the site; the practice's own pages live on
+              cloudcrest.in and are marked as leaving. */}
+          <nav className="hidden md:flex items-center text-[13px] gap-1 min-w-0" aria-label="Primary">
             {isStaff ? (
-              <span className="text-muted-foreground shrink-0 cursor-default select-none">Workspace</span>
-            ) : (
-              <Link to="/" className="text-muted-foreground hover:text-primary transition-colors shrink-0">
+              <span className="px-2.5 py-1.5 text-muted-foreground shrink-0 cursor-default select-none">
                 Workspace
+              </span>
+            ) : (
+              <Link
+                to="/"
+                className="px-2.5 py-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors shrink-0"
+              >
+                Home
               </Link>
             )}
-            <ChevronRight className="size-3 text-muted-foreground/60 shrink-0" />
-            <span className="text-foreground font-medium truncate">
-              {(() => {
-                const item = groups.flatMap((g) => g.items).find((i) => i.slug === activeSlug);
-                if (item) return item.title;
-                if (pathname.startsWith("/profile")) return "My Account";
-                if (pathname.startsWith("/admin")) return isAdmin ? "Admin Console" : "Employee Console";
-                return "Registration & Compliance";
-              })()}
-            </span>
+            <button
+              type="button"
+              onClick={() => setSidebarCollapsed(false)}
+              className="px-2.5 py-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors shrink-0"
+            >
+              Services
+            </button>
+            <a
+              href="/#about"
+              className="px-2.5 py-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors shrink-0"
+            >
+              About
+            </a>
+            <Link
+              to="/team"
+              className="px-2.5 py-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors shrink-0"
+            >
+              Team
+            </Link>
+            <a
+              href="https://cloudcrest.in"
+              target="_blank"
+              rel="noreferrer"
+              className="px-2.5 py-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors shrink-0 inline-flex items-center gap-1"
+            >
+              Compliance
+              <ExternalLink className="size-3 opacity-60" />
+            </a>
           </nav>
         </div>
         <div className="flex items-center gap-3 shrink-0">
@@ -307,8 +401,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
         {/* Sidebar — full-height drawer over the page on phones, sticky push-panel
             from tablet up. */}
         <aside
-          onMouseEnter={cancelAutoCollapse}
-          onMouseMove={cancelAutoCollapse}
+          ref={asideRef}
           onFocusCapture={cancelAutoCollapse}
           onClickCapture={cancelAutoCollapse}
           onTouchStart={cancelAutoCollapse}
@@ -396,14 +489,21 @@ export default function AppShell({ children }: { children?: ReactNode }) {
               }
 
               return (
-                <div key={group.label} className="nav-in" style={{ "--i": gi } as React.CSSProperties}>
+                <div
+                  key={group.label}
+                  className="nav-in"
+                  style={{ "--i": gi } as React.CSSProperties}
+                  onMouseLeave={hoverCloseGroup}
+                >
                   {/* Section heading — flat, no card */}
                   <button
                     type="button"
                     onClick={() => toggleGroup(group.label)}
                     onMouseEnter={() => hoverOpenGroup(group.label)}
-                    onMouseLeave={cancelHoverOpen}
-                    onFocus={() => openOnly(group.label)}
+                    onFocus={() => {
+                      commitHoverOpen();
+                      openOnly(group.label);
+                    }}
                     className="group w-full flex items-start gap-2 px-2 py-2 rounded-md text-left transition-colors cursor-pointer select-none hover:bg-primary/10"
                   >
                     <span

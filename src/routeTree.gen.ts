@@ -9,37 +9,53 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as MSlugRouteImport } from './routes/m.$slug'
-import { Route as CCategoryIdRouteImport } from './routes/c.$categoryId'
-import { Route as AdminLoginRouteImport } from './routes/admin.login'
-import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as TeamRouteImport } from './routes/team'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as CCategoryIdRouteImport } from './routes/c.$categoryId'
+import { Route as MSlugRouteImport } from './routes/m.$slug'
 import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated/profile.index'
-import { Route as AuthenticatedProfileSettingsRouteImport } from './routes/_authenticated/profile.settings'
-import { Route as AuthenticatedProfileRequestsRouteImport } from './routes/_authenticated/profile.requests'
-import { Route as AuthenticatedProfileOrdersRouteImport } from './routes/_authenticated/profile.orders'
 import { Route as AuthenticatedProfileDocumentsRouteImport } from './routes/_authenticated/profile.documents'
+import { Route as AuthenticatedProfileOrdersRouteImport } from './routes/_authenticated/profile.orders'
+import { Route as AuthenticatedProfileRequestsRouteImport } from './routes/_authenticated/profile.requests'
+import { Route as AuthenticatedProfileSettingsRouteImport } from './routes/_authenticated/profile.settings'
 
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MSlugRoute = MSlugRouteImport.update({
-  id: '/m/$slug',
-  path: '/m/$slug',
+const TeamRoute = TeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CCategoryIdRoute = CCategoryIdRouteImport.update({
@@ -47,43 +63,15 @@ const CCategoryIdRoute = CCategoryIdRouteImport.update({
   path: '/c/$categoryId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/admin/login',
-  path: '/admin/login',
+const MSlugRoute = MSlugRouteImport.update({
+  id: '/m/$slug',
+  path: '/m/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedProfileIndexRoute =
   AuthenticatedProfileIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => AuthenticatedProfileRoute,
-  } as any)
-const AuthenticatedProfileSettingsRoute =
-  AuthenticatedProfileSettingsRouteImport.update({
-    id: '/settings',
-    path: '/settings',
-    getParentRoute: () => AuthenticatedProfileRoute,
-  } as any)
-const AuthenticatedProfileRequestsRoute =
-  AuthenticatedProfileRequestsRouteImport.update({
-    id: '/requests',
-    path: '/requests',
-    getParentRoute: () => AuthenticatedProfileRoute,
-  } as any)
-const AuthenticatedProfileOrdersRoute =
-  AuthenticatedProfileOrdersRouteImport.update({
-    id: '/orders',
-    path: '/orders',
     getParentRoute: () => AuthenticatedProfileRoute,
   } as any)
 const AuthenticatedProfileDocumentsRoute =
@@ -92,10 +80,29 @@ const AuthenticatedProfileDocumentsRoute =
     path: '/documents',
     getParentRoute: () => AuthenticatedProfileRoute,
   } as any)
+const AuthenticatedProfileOrdersRoute =
+  AuthenticatedProfileOrdersRouteImport.update({
+    id: '/orders',
+    path: '/orders',
+    getParentRoute: () => AuthenticatedProfileRoute,
+  } as any)
+const AuthenticatedProfileRequestsRoute =
+  AuthenticatedProfileRequestsRouteImport.update({
+    id: '/requests',
+    path: '/requests',
+    getParentRoute: () => AuthenticatedProfileRoute,
+  } as any)
+const AuthenticatedProfileSettingsRoute =
+  AuthenticatedProfileSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedProfileRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/team': typeof TeamRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/profile': typeof AuthenticatedProfileRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/team': typeof TeamRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/admin/login': typeof AdminLoginRoute
   '/c/$categoryId': typeof CCategoryIdRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/team': typeof TeamRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
@@ -141,6 +150,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/team'
     | '/admin'
     | '/profile'
     | '/admin/login'
@@ -155,6 +165,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/team'
     | '/admin'
     | '/admin/login'
     | '/c/$categoryId'
@@ -169,6 +180,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/team'
     | '/_authenticated/admin'
     | '/_authenticated/profile'
     | '/admin/login'
@@ -185,6 +197,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  TeamRoute: typeof TeamRoute
   AdminLoginRoute: typeof AdminLoginRoute
   CCategoryIdRoute: typeof CCategoryIdRoute
   MSlugRoute: typeof MSlugRoute
@@ -192,11 +205,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -206,18 +219,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/m/$slug': {
-      id: '/m/$slug'
-      path: '/m/$slug'
-      fullPath: '/m/$slug'
-      preLoaderRoute: typeof MSlugRouteImport
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/c/$categoryId': {
@@ -227,26 +261,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CCategoryIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/login': {
-      id: '/admin/login'
-      path: '/admin/login'
-      fullPath: '/admin/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
+    '/m/$slug': {
+      id: '/m/$slug'
+      path: '/m/$slug'
+      fullPath: '/m/$slug'
+      preLoaderRoute: typeof MSlugRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/profile': {
-      id: '/_authenticated/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthenticatedProfileRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/profile/': {
       id: '/_authenticated/profile/'
@@ -255,18 +275,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileIndexRouteImport
       parentRoute: typeof AuthenticatedProfileRoute
     }
-    '/_authenticated/profile/settings': {
-      id: '/_authenticated/profile/settings'
-      path: '/settings'
-      fullPath: '/profile/settings'
-      preLoaderRoute: typeof AuthenticatedProfileSettingsRouteImport
-      parentRoute: typeof AuthenticatedProfileRoute
-    }
-    '/_authenticated/profile/requests': {
-      id: '/_authenticated/profile/requests'
-      path: '/requests'
-      fullPath: '/profile/requests'
-      preLoaderRoute: typeof AuthenticatedProfileRequestsRouteImport
+    '/_authenticated/profile/documents': {
+      id: '/_authenticated/profile/documents'
+      path: '/documents'
+      fullPath: '/profile/documents'
+      preLoaderRoute: typeof AuthenticatedProfileDocumentsRouteImport
       parentRoute: typeof AuthenticatedProfileRoute
     }
     '/_authenticated/profile/orders': {
@@ -276,11 +289,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileOrdersRouteImport
       parentRoute: typeof AuthenticatedProfileRoute
     }
-    '/_authenticated/profile/documents': {
-      id: '/_authenticated/profile/documents'
-      path: '/documents'
-      fullPath: '/profile/documents'
-      preLoaderRoute: typeof AuthenticatedProfileDocumentsRouteImport
+    '/_authenticated/profile/requests': {
+      id: '/_authenticated/profile/requests'
+      path: '/requests'
+      fullPath: '/profile/requests'
+      preLoaderRoute: typeof AuthenticatedProfileRequestsRouteImport
+      parentRoute: typeof AuthenticatedProfileRoute
+    }
+    '/_authenticated/profile/settings': {
+      id: '/_authenticated/profile/settings'
+      path: '/settings'
+      fullPath: '/profile/settings'
+      preLoaderRoute: typeof AuthenticatedProfileSettingsRouteImport
       parentRoute: typeof AuthenticatedProfileRoute
     }
   }
@@ -322,6 +342,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  TeamRoute: TeamRoute,
   AdminLoginRoute: AdminLoginRoute,
   CCategoryIdRoute: CCategoryIdRoute,
   MSlugRoute: MSlugRoute,
