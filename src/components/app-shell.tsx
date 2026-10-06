@@ -289,7 +289,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
       </div>
 
       {/* Top header — the brand block lives here so it stays put when the sidebar collapses */}
-      <header className="h-16 border-b border-border bg-surface/98 sticky top-0 z-20 flex items-center justify-between pl-3 pr-3 md:pl-4 md:pr-8 gap-2 md:gap-4">
+      <header className="h-16 border-b border-border bg-surface/98 sticky top-0 z-20 flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] pl-3 pr-3 md:pl-4 md:pr-8 gap-2 md:gap-4">
         <div className="flex items-center gap-3 md:gap-6 min-w-0">
           {/* Hamburger — toggles the sidebar between the icon rail and full catalog. */}
           <button
@@ -338,7 +338,11 @@ export default function AppShell({ children }: { children?: ReactNode }) {
               destinations instead. Services opens the catalog rail, which is
               the real index of the site; the practice's own pages live on
               cloudcrest.in and are marked as leaving. */}
-          <nav className="hidden md:flex items-center text-[13px] gap-1 min-w-0" aria-label="Primary">
+        </div>
+
+        {/* From lg only: centred in the header it needs the full width of the
+            middle column, and at tablet sizes it ran into the brand block. */}
+        <nav className="hidden lg:flex items-center text-[13px] gap-1" aria-label="Primary">
             {isStaff ? (
               <span className="px-2.5 py-1.5 text-muted-foreground shrink-0 cursor-default select-none">
                 Workspace
@@ -379,9 +383,9 @@ export default function AppShell({ children }: { children?: ReactNode }) {
               Compliance
               <ExternalLink className="size-3 opacity-60" />
             </a>
-          </nav>
-        </div>
-        <div className="flex items-center gap-3 shrink-0">
+        </nav>
+
+        <div className="flex items-center gap-3 shrink-0 justify-self-end">
           <NotificationMenu />
           <AccountMenu />
         </div>
@@ -425,6 +429,47 @@ export default function AppShell({ children }: { children?: ReactNode }) {
               <X className="size-5" />
             </button>
           </div>
+          {/* The same primary links as the header, for the widths where the
+              header cannot show them. Below lg the centred nav would collide
+              with the brand block, so it hides there and lives here instead —
+              the links stay reachable at every width rather than disappearing
+              between the phone and the desktop layouts. */}
+          <nav
+            className="lg:hidden px-3 py-3 border-b border-border flex flex-wrap gap-1"
+            aria-label="Primary"
+          >
+            <Link
+              to="/"
+              onClick={closeSidebarOnMobile}
+              className="px-2.5 py-1.5 rounded-lg text-[13px] font-medium text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors"
+            >
+              Home
+            </Link>
+            <a
+              href="/#about"
+              onClick={closeSidebarOnMobile}
+              className="px-2.5 py-1.5 rounded-lg text-[13px] font-medium text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors"
+            >
+              About
+            </a>
+            <Link
+              to="/team"
+              onClick={closeSidebarOnMobile}
+              className="px-2.5 py-1.5 rounded-lg text-[13px] font-medium text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors"
+            >
+              Team
+            </Link>
+            <a
+              href="https://cloudcrest.in"
+              target="_blank"
+              rel="noreferrer"
+              className="px-2.5 py-1.5 rounded-lg text-[13px] font-medium text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors inline-flex items-center gap-1"
+            >
+              Compliance
+              <ExternalLink className="size-3 opacity-60" />
+            </a>
+          </nav>
+
           <div className="px-4 py-3 border-b border-border">
             <div className="flex items-center gap-2 h-9 px-3 rounded-lg bg-muted/70 border border-border focus-within:ring-2 focus-within:ring-primary/25 focus-within:border-primary transition-all">
               <Search className="size-3.5 text-muted-foreground" />
