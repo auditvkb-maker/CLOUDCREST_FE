@@ -571,10 +571,10 @@ export function LandingHero() {
             )}
           </div>
 
-          {/* Set in the display serif and centred under the search field rather
-              than ranged left with the headline: it is a caption for the search,
-              not a continuation of the headline, and centring separates the two. */}
-          <p className="mt-4 sm:mt-5 font-display text-foreground/80 text-[16.5px] sm:text-[18px] md:text-[20px] max-w-xl mx-auto text-center leading-[1.55] tracking-[-0.005em]">
+          {/* Set in the display serif to match the headline. Alignment follows
+              the rest of the hero column: centred on narrow screens, ranged left
+              from lg. */}
+          <p className="mt-4 sm:mt-5 font-display text-foreground/80 text-[16.5px] sm:text-[18px] md:text-[20px] max-w-xl mx-auto lg:mx-0 text-center lg:text-left leading-[1.55] tracking-[-0.005em]">
             Check your name against the live MCA register, upload documents once, and let a CA or
             CS handle every filing — MCA, GST, MSME, Trademark and more.
           </p>
