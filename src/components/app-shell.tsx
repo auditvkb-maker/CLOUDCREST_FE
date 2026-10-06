@@ -128,11 +128,12 @@ export default function AppShell({ children }: { children?: ReactNode }) {
   /**
    * Take the visitor to the About section on the home page.
    *
-   * A plain `href="/#about"` raced the page: the browser jumps to the anchor at
-   * load, while the sections below the fold are still arriving and changing
-   * height, so it landed well past the heading. From another route it would not
-   * scroll at all, having already rendered by the time the hash was read.
-   * Routing first and scrolling afterwards removes the race.
+   * No fragment in the href. A hash raced the page: the browser jumped to the
+   * anchor while the sections below the fold were still arriving and changing
+   * height, so it landed well past the heading, and from another route it did
+   * not scroll at all, having already rendered by the time the hash was read.
+   * The link points at the home page and this handler does the scrolling, so
+   * no `#about` is shown on hover or left in the address bar.
    */
   const navigate = useNavigate();
   const goToAbout = (e: React.MouseEvent) => {
@@ -416,7 +417,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
               Services
             </button>
             <a
-              href="/#about"
+              href="/"
               onClick={goToAbout}
               className="px-2.5 py-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors shrink-0"
             >
@@ -500,7 +501,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
               Home
             </Link>
             <a
-              href="/#about"
+              href="/"
               onClick={goToAbout}
               className="px-2.5 py-1.5 rounded-lg text-[13px] font-medium text-muted-foreground hover:text-primary hover:bg-muted/60 transition-colors"
             >
