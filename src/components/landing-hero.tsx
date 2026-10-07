@@ -673,7 +673,9 @@ export function LandingHero() {
           ~6,400px wall of identical cards. The home page now shows the handful
           people actually arrive looking for and points at the sidebar for the
           rest. */}
-      <section className="relative pt-14 md:pt-20 pb-16 md:pb-24">
+      {/* The sidebar's category headings scroll here, so this needs a stable id
+          and enough scroll margin to clear the sticky header. */}
+      <section id="services" className="relative scroll-mt-24 pt-14 md:pt-20 pb-16 md:pb-24">
         <div className="cards-blue-glow">
           <span className="cloud-1" />
           <span className="cloud-2" />

@@ -186,6 +186,57 @@ export default function AppShell({ children }: { children?: ReactNode }) {
     }
   };
 
+  /**
+   * Sends a category heading to the home page's services section.
+   *
+   * The headings previously did nothing on click - hover already opens them,
+   * so the click was spent on a disclosure that had already happened.
+   *
+   * Same shape as `goToAbout` above, and for the same reason: scrolling
+   * straight after calling `navigate` does not work, because the router
+   * restores scroll position once the route mounts and simply undoes it.
+   * Awaiting the navigation and then waiting for the section to exist is what
+   * makes it land. Routing with a `hash` works too, but leaves "#services" in
+   * the address bar.
+   */
+  const goToServices = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    closeSidebarOnMobile();
+    const scrollToServices = () => {
+      const el = document.getElementById("services");
+      if (!el) return;
+      // Clear the sticky header, which would otherwise cover the heading.
+      const top = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: "smooth" });
+      // Smooth scrolling is a no-op in some embedded browsers, which would
+      // leave this doing nothing at all. Check where we landed and jump if the
+      // animation never ran, recomputing the offset because the home page is
+      // still growing as its revealed sections arrive.
+      window.setTimeout(() => {
+        const settled = document.getElementById("services");
+        if (!settled) return;
+        const corrected = settled.getBoundingClientRect().top + window.scrollY - 80;
+        if (Math.abs(window.scrollY - corrected) > 40) window.scrollTo(0, corrected);
+      }, 700);
+    };
+
+    if (pathname === "/") {
+      scrollToServices();
+      return;
+    }
+    void navigate({ to: "/" }).then(() => {
+      let tries = 0;
+      const whenReady = () => {
+        if (document.getElementById("services")) {
+          scrollToServices();
+        } else if (tries++ < 40) {
+          window.setTimeout(whenReady, 50);
+        }
+      };
+      whenReady();
+    });
+  };
+
   // Services come from the backend catalog; the built-in list is only a fallback
   // so the sidebar still renders if the API is unreachable. Shared with the home
   // page so a newly published service appears in both.
@@ -595,37 +646,54 @@ export default function AppShell({ children }: { children?: ReactNode }) {
                   style={{ "--i": gi } as React.CSSProperties}
                   onMouseLeave={hoverCloseGroup}
                 >
-                  {/* Section heading — flat, no card */}
-                  <button
-                    type="button"
-                    onClick={() => toggleGroup(group.label)}
+                  {/* Section heading — flat, no card.
+                      Two controls, not one: the label goes to the services
+                      section on the home page, and the chevron keeps the
+                      disclosure. Collapsing both into a single button would
+                      leave touch users — who have no hover to open a group
+                      with — without any way to expand one. */}
+                  <div
+                    className="group flex items-start gap-2 rounded-md px-2 py-2 transition-colors hover:bg-primary/10"
                     onMouseEnter={() => hoverOpenGroup(group.label)}
-                    onFocus={() => {
-                      commitHoverOpen();
-                      openOnly(group.label);
-                    }}
-                    className="group w-full flex items-start gap-2 px-2 py-2 rounded-md text-left transition-colors cursor-pointer select-none hover:bg-primary/10"
                   >
-                    <span
-                      className={
-                        "flex-1 min-w-0 break-words leading-snug text-[11.5px] font-bold uppercase tracking-[0.12em] transition-colors " +
-                        (hasActiveChild ? "text-primary" : "text-foreground group-hover:text-primary")
-                      }
+                    <button
+                      type="button"
+                      onClick={goToServices}
+                      onFocus={() => {
+                        commitHoverOpen();
+                        openOnly(group.label);
+                      }}
+                      className="flex-1 min-w-0 text-left cursor-pointer select-none"
                     >
-                      {group.label}
-                    </span>
+                      <span
+                        className={
+                          "block break-words leading-snug text-[11.5px] font-bold uppercase tracking-[0.12em] transition-colors " +
+                          (hasActiveChild ? "text-primary" : "text-foreground group-hover:text-primary")
+                        }
+                      >
+                        {group.label}
+                      </span>
+                    </button>
                     <span className="mono text-[9px] text-muted-foreground/60 tabular-nums mt-[3px] shrink-0">
                       {group.items.length.toString().padStart(2, "0")}
                     </span>
-                    <ChevronDown
-                      className={
-                        "size-3.5 shrink-0 transition-transform duration-300 " +
-                        (isOpen
-                          ? "rotate-180 " + (hasActiveChild ? "text-primary" : "text-foreground/60")
-                          : "text-muted-foreground/60")
-                      }
-                    />
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => toggleGroup(group.label)}
+                      aria-expanded={isOpen}
+                      aria-label={`${isOpen ? "Collapse" : "Expand"} ${group.label}`}
+                      className="shrink-0 -my-1 -mr-1 p-1 rounded cursor-pointer hover:bg-primary/10"
+                    >
+                      <ChevronDown
+                        className={
+                          "size-3.5 transition-transform duration-300 " +
+                          (isOpen
+                            ? "rotate-180 " + (hasActiveChild ? "text-primary" : "text-foreground/60")
+                            : "text-muted-foreground/60")
+                        }
+                      />
+                    </button>
+                  </div>
 
                   {/* Items — animate open/closed via grid rows */}
                   <div
