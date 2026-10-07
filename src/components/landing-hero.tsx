@@ -328,7 +328,7 @@ export function LandingHero() {
               </>
             )}
           </div>
-          <h1 className="mt-3 sm:mt-4 text-[2.05rem] sm:text-5xl md:text-6xl lg:text-[4.25rem] font-display font-semibold tracking-[-0.03em] leading-[1.02] sm:leading-[0.98]">
+          <h1 className="mt-3 sm:mt-4 text-[2.15rem] sm:text-5xl md:text-6xl lg:text-[3.5rem] xl:text-[4.25rem] font-display font-bold tracking-[-0.012em] leading-[1.04] sm:leading-[1.0]">
             <span className="rise-in inline-block" style={{ "--i": 1 } as React.CSSProperties}>
               Start your{" "}
             </span>
@@ -342,7 +342,7 @@ export function LandingHero() {
                 "registration" lost its tail. The padding extends the paint; the
                 negative margin keeps it out of the layout. */}
             <span
-              className="rise-in inline-block bg-clip-text pb-[0.18em] -mb-[0.18em] text-transparent"
+              className="rise-in inline-block bg-clip-text pb-[0.18em] -mb-[0.18em] text-transparent italic font-normal"
               style={{
                 "--i": 2,
                 backgroundImage:
@@ -574,7 +574,11 @@ export function LandingHero() {
           {/* Set in the display serif to match the headline. Alignment follows
               the rest of the hero column: centred on narrow screens, ranged left
               from lg. */}
-          <p className="mt-4 sm:mt-5 font-display text-foreground/80 text-[16.5px] sm:text-[18px] md:text-[20px] max-w-xl mx-auto lg:mx-0 text-center lg:text-left leading-[1.55] tracking-[-0.005em]">
+          {/* Body copy, so it uses the body face. This carried `font-display`,
+              which set it in the serif heading face at 20px while the matching
+              paragraphs in the sections below it were sans — the three read as
+              three different voices. */}
+          <p className="mt-4 sm:mt-5 text-foreground/80 text-[14.5px] sm:text-[15.5px] md:text-[16.5px] max-w-xl mx-auto lg:mx-0 text-center lg:text-left leading-[1.6] tracking-[-0.005em]">
             Check your name against the live MCA register, upload documents once, and let a CA or
             CS handle every filing — MCA, GST, MSME, Trademark and more.
           </p>
@@ -593,7 +597,11 @@ export function LandingHero() {
                name check expands the column to its left by several hundred
                pixels, and a centred card slid down the page as the results
                opened. */
-            className="pointer-events-none hidden lg:block absolute right-12 top-32 xl:top-36 w-[25rem] xl:w-[27rem]"
+            /* Shown from xl, not lg: the breakpoint measures the viewport, but
+               the sidebar takes about 205px out of it, so at lg widths this
+               card had no room and sat on top of the search field and the
+               structure chips. */
+            className="pointer-events-none hidden xl:block absolute right-12 top-36 w-[25rem] 2xl:w-[27rem]"
           >
             <div className="hero-float rounded-2xl border border-white/60 bg-white/85 p-5 shadow-[0_32px_80px_-24px_oklch(0.25_0.09_262_/_0.45)] backdrop-blur-xl">
               <div className="flex items-center gap-2.5 rounded-xl border border-border bg-background px-3.5 py-2.5">

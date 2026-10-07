@@ -46,9 +46,21 @@
   --color-brand-foreground: var(--brand-foreground);
   --color-navy: var(--navy);
   --color-navy-foreground: var(--navy-foreground);
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Fraunces", "Plus Jakarta Sans", Georgia, "Times New Roman", serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+  /* Matched to indiafilings.com, measured from the live site rather than
+     guessed: headings are plain Georgia with no webfont behind them, and the
+     only face they load is Inter.
+
+     The previous stack - Fraunces + Plus Jakarta Sans + JetBrains Mono - is the
+     signature of AI-generated and template sites, which is what the client
+     recognised. Georgia predates all of that, which is much of why it reads as
+     an established firm.
+
+     --font-mono keeps its name for the small spaced capitals it has always
+     styled, but no longer points at a code face: a developer typeface used for
+     marketing labels was a large part of the tell. */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: Georgia, "Times New Roman", Times, serif;
+  --font-mono: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   /* Layered soft shadows (Stripe/Linear style): a tight contact shadow plus a
      wide, diffuse ambient one so surfaces float rather than sit on a hard edge. */
