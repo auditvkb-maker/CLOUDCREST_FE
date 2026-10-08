@@ -18,6 +18,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as CCategoryIdRouteImport } from './routes/c.$categoryId'
 import { Route as MSlugRouteImport } from './routes/m.$slug'
+import { Route as ServicesCategoryRouteImport } from './routes/services.$category'
 import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated/profile.index'
 import { Route as AuthenticatedProfileDocumentsRouteImport } from './routes/_authenticated/profile.documents'
 import { Route as AuthenticatedProfileOrdersRouteImport } from './routes/_authenticated/profile.orders'
@@ -68,6 +69,11 @@ const MSlugRoute = MSlugRouteImport.update({
   path: '/m/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesCategoryRoute = ServicesCategoryRouteImport.update({
+  id: '/services/$category',
+  path: '/services/$category',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedProfileIndexRoute =
   AuthenticatedProfileIndexRouteImport.update({
     id: '/',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/c/$categoryId': typeof CCategoryIdRoute
   '/m/$slug': typeof MSlugRoute
+  '/services/$category': typeof ServicesCategoryRoute
   '/profile/documents': typeof AuthenticatedProfileDocumentsRoute
   '/profile/orders': typeof AuthenticatedProfileOrdersRoute
   '/profile/requests': typeof AuthenticatedProfileRequestsRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/c/$categoryId': typeof CCategoryIdRoute
   '/m/$slug': typeof MSlugRoute
+  '/services/$category': typeof ServicesCategoryRoute
   '/profile/documents': typeof AuthenticatedProfileDocumentsRoute
   '/profile/orders': typeof AuthenticatedProfileOrdersRoute
   '/profile/requests': typeof AuthenticatedProfileRequestsRoute
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/c/$categoryId': typeof CCategoryIdRoute
   '/m/$slug': typeof MSlugRoute
+  '/services/$category': typeof ServicesCategoryRoute
   '/_authenticated/profile/documents': typeof AuthenticatedProfileDocumentsRoute
   '/_authenticated/profile/orders': typeof AuthenticatedProfileOrdersRoute
   '/_authenticated/profile/requests': typeof AuthenticatedProfileRequestsRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/c/$categoryId'
     | '/m/$slug'
+    | '/services/$category'
     | '/profile/documents'
     | '/profile/orders'
     | '/profile/requests'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/c/$categoryId'
     | '/m/$slug'
+    | '/services/$category'
     | '/profile/documents'
     | '/profile/orders'
     | '/profile/requests'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/c/$categoryId'
     | '/m/$slug'
+    | '/services/$category'
     | '/_authenticated/profile/documents'
     | '/_authenticated/profile/orders'
     | '/_authenticated/profile/requests'
@@ -201,6 +213,7 @@ export interface RootRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   CCategoryIdRoute: typeof CCategoryIdRoute
   MSlugRoute: typeof MSlugRoute
+  ServicesCategoryRoute: typeof ServicesCategoryRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -266,6 +279,13 @@ declare module '@tanstack/react-router' {
       path: '/m/$slug'
       fullPath: '/m/$slug'
       preLoaderRoute: typeof MSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/$category': {
+      id: '/services/$category'
+      path: '/services/$category'
+      fullPath: '/services/$category'
+      preLoaderRoute: typeof ServicesCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/profile/': {
@@ -346,6 +366,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   CCategoryIdRoute: CCategoryIdRoute,
   MSlugRoute: MSlugRoute,
+  ServicesCategoryRoute: ServicesCategoryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

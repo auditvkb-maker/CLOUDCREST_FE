@@ -8,6 +8,7 @@ import { useState, useRef, useEffect, createContext, useContext, type ReactNode 
 import { useAuth } from "@/hooks/use-auth";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import logo from "@/assets/cloudcrest-logo.png";
+import { categorySlug } from "@/lib/category-slug";
 
 /**
  * Lets a page rendered inside the shell open the sidebar — the home page's
@@ -39,6 +40,10 @@ export default function AppShell({ children }: { children?: ReactNode }) {
     : pathname.startsWith("/m/")
     ? pathname.split("/")[2]
     : "";
+
+  // Set on a category page (/services/<category>) so that category's heading is
+  // marked and its group opened, the way a service page does for its own group.
+  const activeCategory = pathname.startsWith("/services/") ? pathname.split("/")[2] : "";
 
   const [searchQuery, setSearchQuery] = useState("");
   // Sidebar is hidden by default, but opens automatically on a service page
@@ -186,57 +191,6 @@ export default function AppShell({ children }: { children?: ReactNode }) {
     }
   };
 
-  /**
-   * Sends a category heading to the home page's services section.
-   *
-   * The headings previously did nothing on click - hover already opens them,
-   * so the click was spent on a disclosure that had already happened.
-   *
-   * Same shape as `goToAbout` above, and for the same reason: scrolling
-   * straight after calling `navigate` does not work, because the router
-   * restores scroll position once the route mounts and simply undoes it.
-   * Awaiting the navigation and then waiting for the section to exist is what
-   * makes it land. Routing with a `hash` works too, but leaves "#services" in
-   * the address bar.
-   */
-  const goToServices = (e?: React.MouseEvent) => {
-    e?.preventDefault();
-    closeSidebarOnMobile();
-    const scrollToServices = () => {
-      const el = document.getElementById("services");
-      if (!el) return;
-      // Clear the sticky header, which would otherwise cover the heading.
-      const top = el.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({ top, behavior: "smooth" });
-      // Smooth scrolling is a no-op in some embedded browsers, which would
-      // leave this doing nothing at all. Check where we landed and jump if the
-      // animation never ran, recomputing the offset because the home page is
-      // still growing as its revealed sections arrive.
-      window.setTimeout(() => {
-        const settled = document.getElementById("services");
-        if (!settled) return;
-        const corrected = settled.getBoundingClientRect().top + window.scrollY - 80;
-        if (Math.abs(window.scrollY - corrected) > 40) window.scrollTo(0, corrected);
-      }, 700);
-    };
-
-    if (pathname === "/") {
-      scrollToServices();
-      return;
-    }
-    void navigate({ to: "/" }).then(() => {
-      let tries = 0;
-      const whenReady = () => {
-        if (document.getElementById("services")) {
-          scrollToServices();
-        } else if (tries++ < 40) {
-          window.setTimeout(whenReady, 50);
-        }
-      };
-      whenReady();
-    });
-  };
-
   // Services come from the backend catalog; the built-in list is only a fallback
   // so the sidebar still renders if the API is unreachable. Shared with the home
   // page so a newly published service appears in both.
@@ -249,12 +203,14 @@ export default function AppShell({ children }: { children?: ReactNode }) {
   // as closed. Opens the group holding the current service, else the first.
   useEffect(() => {
     if (groups.length === 0) return;
-    const activeGroup = groups.find((g) => g.items.some((item) => item.slug === activeSlug));
+    const activeGroup =
+      groups.find((g) => g.items.some((item) => item.slug === activeSlug)) ??
+      groups.find((g) => !!activeCategory && categorySlug(g.label) === activeCategory);
     // No active service (home / profile / admin overview) → leave the groups as the
     // user left them instead of force-opening the first one.
     if (!activeGroup) return;
     setOpenGroups(Object.fromEntries(groups.map((g) => [g.label, g.label === activeGroup.label])));
-  }, [activeSlug, groups]);
+  }, [activeSlug, activeCategory, groups]);
 
   /** Open one group and close the rest — the list stays one screen tall. */
   const openOnly = (label: string) => {
@@ -614,7 +570,8 @@ export default function AppShell({ children }: { children?: ReactNode }) {
             {!loading &&
               filteredGroups.map((group, gi) => {
               const isOpen = searchQuery.trim() ? true : !!openGroups[group.label];
-              const hasActiveChild = group.items.some((m) => m.slug === activeSlug);
+              const hasActiveChild =
+                group.items.some((m) => m.slug === activeSlug) || categorySlug(group.label) === activeCategory;
 
               // A coming-soon category carries no services (the catalog withholds
               // them), so the heading is a link to its notice rather than a
@@ -656,9 +613,13 @@ export default function AppShell({ children }: { children?: ReactNode }) {
                     className="group flex items-start gap-2 rounded-md px-2 py-2 transition-colors hover:bg-primary/10"
                     onMouseEnter={() => hoverOpenGroup(group.label)}
                   >
-                    <button
-                      type="button"
-                      onClick={goToServices}
+                    <Link
+                      to="/services/$category"
+                      params={{ category: categorySlug(group.label) }}
+                      onClick={() => {
+                        commitHoverOpen();
+                        closeSidebarOnMobile();
+                      }}
                       onFocus={() => {
                         commitHoverOpen();
                         openOnly(group.label);
@@ -673,7 +634,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
                       >
                         {group.label}
                       </span>
-                    </button>
+                    </Link>
                     <span className="mono text-[9px] text-muted-foreground/60 tabular-nums mt-[3px] shrink-0">
                       {group.items.length.toString().padStart(2, "0")}
                     </span>
