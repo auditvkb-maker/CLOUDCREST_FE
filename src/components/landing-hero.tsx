@@ -12,6 +12,7 @@ import { ProductDemo } from "@/components/product-demo";
 import { RegistryScale, HomeFaq, HomeCta, AfterRegistration } from "@/components/home-sections";
 import { HomeAbout } from "@/components/home-about";
 import { TrademarkScreening, type TmState } from "@/components/trademark-screening";
+import { ActivityPicker } from "@/components/activity-picker";
 import { HomeClients } from "@/components/home-clients";
 import {
   NameCheckProgress,
@@ -131,6 +132,10 @@ export function LandingHero() {
   const [checkingName, setCheckingName] = useState("");
   // Set when a signed-out visitor tries to check a name — prompts them to sign in.
   const [needAuth, setNeedAuth] = useState(false);
+  // Optional: what the company will mainly do (or its NIC code), so the trade mark check can use the
+  // right classes from the first answer.
+  const [activityId, setActivityId] = useState("");
+  const [nic, setNic] = useState("");
   // What the trade mark screening under the result concluded; the result headline reads it.
   const [tmState, setTmState] = useState<TmState | undefined>(undefined);
   const resultRef = useRef<HTMLDivElement | null>(null);
@@ -436,6 +441,29 @@ export function LandingHero() {
               </ul>
             )}
 
+            {/* Optional, and folded away so it never gets between the applicant and the Check button. */}
+            {!check && !checking && (
+              <details className="group mt-2.5 text-center lg:text-left">
+                <summary className="cursor-pointer select-none list-none inline-flex items-center gap-1.5 text-[12px] sm:text-[12.5px] font-medium text-primary hover:underline [&::-webkit-details-marker]:hidden">
+                  <span className="grid size-4 place-items-center rounded-full bg-primary/10 text-[13px] leading-none group-open:rotate-45 transition-transform">+</span>
+                  Add your business activity or NIC code for a sharper trade mark check
+                  <span className="font-normal text-muted-foreground">(optional)</span>
+                </summary>
+                <div className="mt-2 rounded-xl border border-border bg-white/85 p-3 text-left">
+                  <ActivityPicker
+                    idPrefix="hero"
+                    compact
+                    value={activityId}
+                    nic={nic}
+                    onChange={({ activityId: a, nic: n }) => {
+                      setActivityId(a);
+                      setNic(n);
+                    }}
+                  />
+                </div>
+              </details>
+            )}
+
             {checking && <NameCheckProgress name={checkingName} />}
 
 
@@ -561,6 +589,8 @@ export function LandingHero() {
                         name={check.name}
                         backend={BACKEND}
                         onState={setTmState}
+                        initialActivityId={activityId}
+                        initialNic={nic}
                         onTryAnother={() => {
                           setCheck(null);
                           searchRef.current?.focus();

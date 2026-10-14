@@ -15,7 +15,8 @@ import {
   ShieldAlert,
   ShieldCheck,
 } from "lucide-react";
-import { ACTIVITIES, activityById } from "@/lib/nice-activities";
+import { ActivityPicker } from "@/components/activity-picker";
+import { useActivities } from "@/lib/nice-activities";
 
 /**
  * Trade mark screening, shown inside the name-availability card.
@@ -39,7 +40,7 @@ type Match = {
   class: number | null;
   proprietor: string | null;
   status: string;
-  source: "journal" | "trademarx" | "journal+trademarx";
+  source: "journal" | "trademarx" | "journal+trademarx" | "well-known";
   url: string | null;
   match: "exact" | "same-brand" | "sounds-like" | "looks-like" | "shares-first-word" | "starts-with" | "contains-word";
   classMatch: "same" | "adjacent" | "other" | null;
@@ -148,7 +149,7 @@ function nocDraft(name: string, m: Match) {
     ``,
     `Dear Sir / Madam,`,
     ``,
-    `We propose to incorporate a company under the name "${name}". We have noted that you are the proprietor / applicant of the trade mark "${m.mark}" (application no. ${m.applicationNo}, ${classLabel(m.class)}).`,
+    `We propose to incorporate a company under the name "${name}". We have noted that you are the proprietor / applicant of the trade mark "${m.mark}" (${m.source === "well-known" ? "listed by IP India as a well-known mark" : `application no. ${m.applicationNo}, ${classLabel(m.class)}`}).`,
     ``,
     `Rule 8A(1)(b) requires the consent of the owner of a trade mark where a proposed company name includes a word that is the subject of a registered trade mark or of an application for registration. We therefore request your written no-objection to our use of the word "${m.mark}" as part of the company name "${name}", to be filed with the Registrar of Companies.`,
     ``,
@@ -166,9 +167,14 @@ export function TrademarkScreening({
   backend,
   onTryAnother,
   onState,
+  initialActivityId = "",
+  initialNic = "",
 }: {
   name: string;
   backend: string;
+  /** What the applicant already told us in the search form, so the first answer is already precise. */
+  initialActivityId?: string;
+  initialNic?: string;
   /** Lets the applicant go back and type a different name. */
   onTryAnother?: () => void;
   /** Reports the outcome to the card around this one. */
@@ -177,15 +183,18 @@ export function TrademarkScreening({
   // `picked` is what the dropdown shows; `applied` is what the result was checked with. Changing
   // the dropdown does not search by itself: each check spends the daily quota of the
   // registered-marks source, so it waits for the button.
-  const [picked, setPicked] = useState("");
-  const [applied, setApplied] = useState("");
+  const [picked, setPicked] = useState(initialActivityId);
+  const [pickedNic, setPickedNic] = useState(initialNic);
+  const [applied, setApplied] = useState(initialActivityId);
+  const activities = useActivities();
   const [state, setState] = useState<"loading" | "done" | "error">("loading");
   const [data, setData] = useState<Result | null>(null);
   const [open, setOpen] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const classes = activityById(applied)?.classes ?? [];
+  const activity = activities.find((a) => String(a.id) === applied);
+  const classes = activity?.classes ?? [];
 
   useEffect(() => {
     const ctrl = new AbortController();
@@ -299,7 +308,7 @@ export function TrademarkScreening({
                 <span className={`size-2 shrink-0 rounded-full ${m.risk === "red" ? "bg-destructive" : "bg-amber-500"}`} aria-hidden />
                 <span className="font-semibold truncate">{m.mark}</span>
                 <span className="text-xs text-muted-foreground truncate">
-                  Class {m.class ?? "?"} · {m.status}
+                  {m.source === "well-known" ? "Well-known mark · every class" : `Class ${m.class ?? "?"} · ${m.status}`}
                 </span>
                 <span className={`ml-auto shrink-0 text-[11px] font-medium ${m.risk === "red" ? "text-destructive" : "text-amber-700"}`}>
                   {WHY[m.match]}
@@ -330,30 +339,24 @@ export function TrademarkScreening({
             <p className="mt-0.5 text-xs text-muted-foreground">
               A trade mark only blocks a name in the same kind of business. Choose yours for a sharper result.
             </p>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <select
-                id="tm-activity"
-                value={picked}
-                onChange={(e) => setPicked(e.target.value)}
-                className="h-10 rounded-lg border border-border bg-white px-3 text-sm max-w-full"
+            <ActivityPicker
+              idPrefix="tm"
+              value={picked}
+              nic={pickedNic}
+              onChange={({ activityId, nic }) => {
+                setPicked(activityId);
+                setPickedNic(nic);
+              }}
+            />
+            {picked !== applied && (
+              <button
+                type="button"
+                onClick={() => setApplied(picked)}
+                className="mt-2 h-10 rounded-lg bg-primary px-4 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
               >
-                <option value="">Not sure / any business</option>
-                {ACTIVITIES.map((a) => (
-                  <option key={a.id} value={a.id}>
-                    {a.label}
-                  </option>
-                ))}
-              </select>
-              {picked !== applied && (
-                <button
-                  type="button"
-                  onClick={() => setApplied(picked)}
-                  className="h-10 rounded-lg bg-primary px-4 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
-                >
-                  Check again
-                </button>
-              )}
-            </div>
+                Check again
+              </button>
+            )}
             {classes.length > 0 && (
               <p className="mt-2 text-xs text-muted-foreground">
                 Checked against <b className="text-foreground">{classLabel(classes[0])}</b> (your own class)
@@ -388,7 +391,13 @@ export function TrademarkScreening({
                         )}
                       </div>
                       <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
-                        <span className="rounded-full bg-muted px-2 py-0.5">{classLabel(m.class)}</span>
+                        {m.source === "well-known" ? (
+                          <span className="rounded-full bg-destructive/10 px-2 py-0.5 font-medium text-destructive">
+                            Well-known mark · protected in every class
+                          </span>
+                        ) : (
+                          <span className="rounded-full bg-muted px-2 py-0.5">{classLabel(m.class)}</span>
+                        )}
                         {m.classMatch === "same" && (
                           <span className="rounded-full bg-destructive/10 px-2 py-0.5 font-medium text-destructive">Your business class</span>
                         )}
@@ -396,7 +405,7 @@ export function TrademarkScreening({
                           <span className="rounded-full bg-amber-100 px-2 py-0.5 font-medium text-amber-700">Related class</span>
                         )}
                         <span className="rounded-full bg-muted px-2 py-0.5">{m.status}</span>
-                        <span className="rounded-full bg-muted px-2 py-0.5 mono">App. {m.applicationNo}</span>
+                        {m.source !== "well-known" && <span className="rounded-full bg-muted px-2 py-0.5 mono">App. {m.applicationNo}</span>}
                       </div>
                       {m.proprietor && <div className="mt-1.5 text-xs text-muted-foreground">Owned by {m.proprietor}</div>}
                     </li>
@@ -483,6 +492,9 @@ export function TrademarkScreening({
                   <Check className="size-3.5 text-success" /> Registered marks (TradeMarx)
                 </span>
               )}
+              <span className="inline-flex items-center gap-1">
+                <Check className="size-3.5 text-success" /> IP India well-known marks list
+              </span>
               <span className="inline-flex items-center gap-1">
                 <Check className="size-3.5 text-success" /> Same, similar-sounding and similar-spelled names
               </span>

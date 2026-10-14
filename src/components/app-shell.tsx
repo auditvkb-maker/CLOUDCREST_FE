@@ -1108,6 +1108,14 @@ function AccountMenu() {
                     >
                       <Users className="size-3.5 text-muted-foreground" /> Employees
                     </Link>
+                    <Link
+                      to="/admin"
+                      search={{ view: "trademark" }}
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] hover:bg-muted"
+                    >
+                      <ShieldAlert className="size-3.5 text-muted-foreground" /> Trade mark classes
+                    </Link>
                   </>
                 )}
               </>

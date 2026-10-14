@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import AppShell from "@/components/app-shell";
 import { StatusPill } from "./profile.index";
 import { AdminCatalogPanel } from "@/components/admin-catalog";
+import { AdminTrademarkClassesPanel } from "@/components/admin-trademark-classes";
 import { getModule, DEPARTMENT_SLUGS } from "@/lib/modules";
 import { useCatalogFamily, useCatalogService } from "@/lib/service-catalog";
 import { assetUrl } from "@/lib/file-url";
@@ -23,7 +24,7 @@ import {
   Users, UserPlus, Lock, Unlock,
 } from "lucide-react";
 
-type AdminView = "registrations" | "tickets" | "notifications" | "catalog" | "employees";
+type AdminView = "registrations" | "tickets" | "notifications" | "catalog" | "employees" | "trademark";
 type Search = { service?: string; view?: AdminView };
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -31,7 +32,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   validateSearch: (s: Record<string, unknown>): Search => ({
     service: typeof s.service === "string" ? s.service : undefined,
     view:
-      s.view === "tickets" || s.view === "notifications" || s.view === "catalog" || s.view === "employees"
+      s.view === "tickets" || s.view === "notifications" || s.view === "catalog" || s.view === "employees" || s.view === "trademark"
         ? s.view
         : undefined,
   }),
@@ -67,7 +68,7 @@ function AdminPage() {
   // those views (old link, manual URL), fall back to registrations instead.
   const requestedView: AdminView = viewParam ?? "registrations";
   const view: AdminView =
-    !isAdmin && (requestedView === "catalog" || requestedView === "employees")
+    !isAdmin && (requestedView === "catalog" || requestedView === "employees" || requestedView === "trademark")
       ? "registrations"
       : requestedView;
   const navigate = Route.useNavigate();
@@ -150,6 +151,8 @@ function AdminPage() {
                 ? "Services Catalog"
                 : view === "employees"
                 ? "Employees"
+                : view === "trademark"
+                ? "Trade Mark Classes"
                 : selectedName
                 ? `${selectedName} Registrations`
                 : "All Registrations"}
@@ -163,6 +166,8 @@ function AdminPage() {
                 ? "Create and manage services, fees, page tabs and document checklists."
                 : view === "employees"
                 ? "Add coordinator accounts and manage staff access to the console."
+                : view === "trademark"
+                ? "Choose which trade mark classes the name check tests for each kind of business."
                 : selectedName
                 ? `Showing registrations submitted for ${selectedName} (including its sub-heads). Pick another service from the sidebar to switch.`
                 : "Pick a service from the sidebar to filter, or review every submitted registration below."}
@@ -181,6 +186,7 @@ function AdminPage() {
                 ? ([
                     ["catalog", "Services"],
                     ["employees", "Employees"],
+                    ["trademark", "Trade mark classes"],
                   ] as const)
                 : []),
             ] as const
@@ -207,6 +213,8 @@ function AdminPage() {
           <AdminCatalogPanel />
         ) : view === "employees" ? (
           <EmployeesPanel />
+        ) : view === "trademark" ? (
+          <AdminTrademarkClassesPanel />
         ) : (
         <>
         {service && (
