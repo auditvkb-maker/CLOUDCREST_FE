@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import type { TmState } from "@/components/trademark-screening";
 import {
   AlertCircle,
   ArrowRight,
@@ -326,6 +327,8 @@ export function NameCheckResult({
   backend,
   onProceed,
   onClose,
+  trademark,
+  tmState,
 }: {
   check: NameCheck;
   similar: CompanyMatch[];
@@ -334,8 +337,14 @@ export function NameCheckResult({
   /** Opens the registration wizard for the chosen structure with this name. */
   onProceed: (structure: Exclude<StructureFilter, "all">) => void;
   onClose: () => void;
+  /** The trade mark screening band, shown inside this card for a name that is free on MCA. */
+  trademark?: ReactNode;
+  /** What that screening concluded, so the headline does not oversell an available name. */
+  tmState?: TmState;
 }) {
   const assessment = assessName(check, similar);
+  // An available name with a trade mark warning must not read as a clean pass.
+  const tmWarns = check.available && tmState?.state === "done" && tmState.risk !== "green";
   const risk = RISK_STYLE[assessment.risk];
   const top = check.matches[0];
   const details = useCompanyDetails(backend, top?.identifier);
@@ -385,12 +394,13 @@ export function NameCheckResult({
           {check.available ? <CheckCircle2 className="size-6" /> : <Ban className="size-6" />}
         </div>
         <h3 className="mt-3 text-2xl font-display font-semibold tracking-tight">
-          {check.available ? "Name Available" : "Name Unavailable"}
+          {check.available ? (tmWarns ? "Available on the MCA register" : "Name Available") : "Name Unavailable"}
         </h3>
         <p className="mt-1.5 text-sm text-muted-foreground">
           {check.available ? (
             <>
               No registered company or LLP uses <b className="text-foreground">“{check.name}”</b>.
+              {tmWarns && " But similar trade marks exist, so please read the trade mark check below."}
             </>
           ) : (
             <>
@@ -401,8 +411,10 @@ export function NameCheckResult({
         </p>
       </div>
 
-      {/* Company details — the registered entity that blocks the name, or a plain
-          "no company found" when there isn't one. */}
+      {/* Company details — the registered entity that blocks the name. Nothing to show for a free
+          name, so it is left out rather than printing an empty box. */}
+      {!(check.available && !top) && (
+        <>
       <div className="px-6">
         <div className="text-sm font-semibold mb-2">
           {top ? "Matching record found" : "Company details"}
@@ -482,15 +494,21 @@ export function NameCheckResult({
         )}
       </div>
 
+        </>
+      )}
+
+      {/* Trade mark screening, for a name that is free on the MCA register. */}
+      {check.available && trademark}
+
       {/* Risk & confidence — stated plainly. Two 144px dials said no more than
           the words do and cost most of the panel's height. */}
       <div className="mt-4 px-6 flex flex-wrap items-center gap-x-6 gap-y-1.5 text-sm">
         <div className="flex items-center gap-1.5">
-          <span className="text-muted-foreground">Risk level:</span>
+          <span className="text-muted-foreground">Company-name risk:</span>
           <span className={`font-semibold ${risk.text}`}>{assessment.risk}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="text-muted-foreground">Confidence:</span>
+          <span className="text-muted-foreground">Match confidence:</span>
           <span className="font-semibold text-foreground">{assessment.confidence}%</span>
         </div>
       </div>

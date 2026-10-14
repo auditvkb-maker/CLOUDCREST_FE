@@ -11,7 +11,7 @@ import { useSidebarControl } from "@/components/app-shell";
 import { ProductDemo } from "@/components/product-demo";
 import { RegistryScale, HomeFaq, HomeCta, AfterRegistration } from "@/components/home-sections";
 import { HomeAbout } from "@/components/home-about";
-import { TrademarkScreening } from "@/components/trademark-screening";
+import { TrademarkScreening, type TmState } from "@/components/trademark-screening";
 import { HomeClients } from "@/components/home-clients";
 import {
   NameCheckProgress,
@@ -131,6 +131,9 @@ export function LandingHero() {
   const [checkingName, setCheckingName] = useState("");
   // Set when a signed-out visitor tries to check a name — prompts them to sign in.
   const [needAuth, setNeedAuth] = useState(false);
+  // What the trade mark screening under the result concluded; the result headline reads it.
+  const [tmState, setTmState] = useState<TmState | undefined>(undefined);
+  const resultRef = useRef<HTMLDivElement | null>(null);
   type Company = CompanyMatch;
 
   // Existing companies with the searched name, returned by the availability check.
@@ -187,6 +190,15 @@ export function LandingHero() {
       ctrl.abort();
     };
   }, [q]);
+
+  // A fresh result opens below the search field, which can be off the bottom of the screen.
+  // Bring it up to just under the header so the answer is in view without scrolling.
+  useEffect(() => {
+    if (checking || !check) return;
+    setTmState(undefined);
+    const t = window.setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+    return () => window.clearTimeout(t);
+  }, [check, checking]);
 
   const checkAndGo = async (finalName: string) => {
     if (checking || !finalName.trim()) return;
@@ -530,29 +542,35 @@ export function LandingHero() {
               </div>
             )}
 
+            {/* One card: the MCA answer, then the trade mark check inside it. It scrolls itself into
+                view so the applicant sees the answer without hunting for it. */}
             {!checking && check && (
-              <NameCheckResult
-                check={check}
-                similar={similar}
-                filter={structure}
-                backend={BACKEND}
-                onProceed={proceedWith}
-                onClose={() => setCheck(null)}
-              />
-            )}
-
-            {/* A name that is free on the MCA register can still collide with a trade mark. */}
-            {!checking && check?.available && (
-              <TrademarkScreening
-                key={check.name}
-                name={check.name}
-                backend={BACKEND}
-                onTryAnother={() => {
-                  setCheck(null);
-                  searchRef.current?.focus();
-                  searchRef.current?.select();
-                }}
-              />
+              <div ref={resultRef} className="scroll-mt-24">
+                <NameCheckResult
+                  check={check}
+                  similar={similar}
+                  filter={structure}
+                  backend={BACKEND}
+                  onProceed={proceedWith}
+                  onClose={() => setCheck(null)}
+                  tmState={tmState}
+                  trademark={
+                    check.available ? (
+                      <TrademarkScreening
+                        key={check.name}
+                        name={check.name}
+                        backend={BACKEND}
+                        onState={setTmState}
+                        onTryAnother={() => {
+                          setCheck(null);
+                          searchRef.current?.focus();
+                          searchRef.current?.select();
+                        }}
+                      />
+                    ) : undefined
+                  }
+                />
+              </div>
             )}
           </div>
 
