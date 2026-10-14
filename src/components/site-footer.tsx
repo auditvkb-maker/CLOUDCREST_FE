@@ -127,6 +127,14 @@ export function SiteFooter() {
           <p className="text-xs text-muted-foreground max-w-xl sm:text-right leading-relaxed">
             Cloudcrest is a technology platform, not a law firm or a substitute for an advocate.
             Government approvals rest with the respective authority.
+            {/* Required by TradeMarx's free-API terms: a visible link on the registered domain. */}{" "}
+            <a
+              href="https://trademarx.in/?utm_source=api&utm_medium=attribution&utm_content=49704101"
+              rel="noopener"
+              className="underline underline-offset-2 hover:text-primary transition-colors"
+            >
+              Trademark data powered by TradeMarx
+            </a>
           </p>
         </div>
       </div>

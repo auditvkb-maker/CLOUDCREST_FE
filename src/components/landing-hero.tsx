@@ -11,6 +11,7 @@ import { useSidebarControl } from "@/components/app-shell";
 import { ProductDemo } from "@/components/product-demo";
 import { RegistryScale, HomeFaq, HomeCta, AfterRegistration } from "@/components/home-sections";
 import { HomeAbout } from "@/components/home-about";
+import { TrademarkScreening } from "@/components/trademark-screening";
 import { HomeClients } from "@/components/home-clients";
 import {
   NameCheckProgress,
@@ -537,6 +538,20 @@ export function LandingHero() {
                 backend={BACKEND}
                 onProceed={proceedWith}
                 onClose={() => setCheck(null)}
+              />
+            )}
+
+            {/* A name that is free on the MCA register can still collide with a trade mark. */}
+            {!checking && check?.available && (
+              <TrademarkScreening
+                key={check.name}
+                name={check.name}
+                backend={BACKEND}
+                onTryAnother={() => {
+                  setCheck(null);
+                  searchRef.current?.focus();
+                  searchRef.current?.select();
+                }}
               />
             )}
           </div>
