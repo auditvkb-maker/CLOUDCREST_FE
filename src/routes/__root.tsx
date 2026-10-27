@@ -96,7 +96,7 @@ const ORGANISATION_JSONLD = {
   "@type": "ProfessionalService",
   name: "FoundersKite",
   url: SITE_URL,
-  image: `${SITE_URL}/favicon.png`,
+  image: `${SITE_URL}/founderskite-icon.png`,
   description:
     "Company, LLP, GST, MSME and trademark registration across India, with every filing reviewed by a Chartered Accountant or Company Secretary.",
   address: {
@@ -170,7 +170,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "icon", href: "/founderskite-icon.png", type: "image/png" },
       { rel: "canonical", href: SITE_URL },
     ],
     scripts: [
