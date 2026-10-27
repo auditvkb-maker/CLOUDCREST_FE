@@ -21,13 +21,13 @@ const FACTS = [
 const TESTIMONIALS = [
   {
     quote:
-      "We have recently incorporated a company with Cloudcrest Business Management LLP. Their incorporation services were seamless and professional. I highly recommend them to anyone seeking top-notch services.",
+      "We have recently incorporated a company with FoundersKite. Their incorporation services were seamless and professional. I highly recommend them to anyone seeking top-notch services.",
     name: "Pss Prashanth",
     role: "Company Director",
   },
   {
     quote:
-      "CloudCrest's expert financial and tax guidance has been crucial in ensuring our business's compliance, optimizing our tax strategy, and supporting our growth, making them an invaluable partner in our success.",
+      "FoundersKite's expert financial and tax guidance has been crucial in ensuring our business's compliance, optimizing our tax strategy, and supporting our growth, making them an invaluable partner in our success.",
     name: "Kasi Naidu",
     role: "Business Owner",
   },
@@ -56,7 +56,7 @@ export function HomeAbout() {
               A practice, not a portal
             </h2>
             <p className="mt-5 text-[15px] text-muted-foreground leading-relaxed">
-              Cloudcrest is a firm specialising in virtual accounting, payroll and taxation
+              FoundersKite is a firm specialising in virtual accounting, payroll and taxation
               services. We deliver financial advisory that ensures full statutory compliance,
               prompt service and maximum client satisfaction — for businesses that would rather
               build than chase paperwork.

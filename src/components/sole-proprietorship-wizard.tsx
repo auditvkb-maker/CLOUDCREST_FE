@@ -630,7 +630,7 @@ export function SoleProprietorshipStepperWizard({
                       </div>
                     ) : (
                       <div className="text-[13px] text-muted-foreground">
-                        Pricing for this state will be confirmed by your Cloudcrest BM advisor. You can proceed with submission.
+                        Pricing for this state will be confirmed by your FoundersKite advisor. You can proceed with submission.
                       </div>
                     )}
                   </div>

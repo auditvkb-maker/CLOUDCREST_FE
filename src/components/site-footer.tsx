@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Phone, Mail, Clock, MapPin } from "lucide-react";
-import logo from "@/assets/cloudcrest-logo.png";
+import logo from "@/assets/founderskite-logo.png";
 
 /**
  * Global footer, rendered once by AppShell so every route carries it.
@@ -61,7 +61,7 @@ export function SiteFooter() {
           <div className="min-w-0">
             <Link to="/" className="inline-flex items-center gap-2">
               <img src={logo} alt="" aria-hidden className="h-7 w-auto" />
-              <span className="sr-only">Cloudcrest — home</span>
+              <span className="sr-only">FoundersKite — home</span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed max-w-xs">
               Company registrations, tax filings and licences for Indian businesses — handled
@@ -122,10 +122,10 @@ export function SiteFooter() {
       <div className="border-t border-border">
         <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
-            © {year} Cloudcrest Business Management Private Limited. All rights reserved.
+            © {year} FoundersKite. All rights reserved.
           </p>
           <p className="text-xs text-muted-foreground max-w-xl sm:text-right leading-relaxed">
-            Cloudcrest is a technology platform, not a law firm or a substitute for an advocate.
+            FoundersKite is a technology platform, not a law firm or a substitute for an advocate.
             Government approvals rest with the respective authority.
             {/* Required by TradeMarx's free-API terms: a visible link on the registered domain. */}{" "}
             <a

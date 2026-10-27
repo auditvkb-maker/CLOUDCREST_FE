@@ -253,7 +253,7 @@ export function ReraWizard({ initialName, onBack: onExit }: { initialName?: stri
       <WizardHero
         eyebrow="TGRERA · APRERA · K-RERA"
         title="RERA Project Registration"
-        blurb="Guided Cloudcrest BM workspace for registering a real-estate project under RERA — jurisdiction and promoter type, project timeline, the mandatory 70% escrow account and the full document set, through to your registration number."
+        blurb="Guided FoundersKite workspace for registering a real-estate project under RERA — jurisdiction and promoter type, project timeline, the mandatory 70% escrow account and the full document set, through to your registration number."
         highlights={HIGHLIGHTS}
       />
 
@@ -455,7 +455,7 @@ export function ReraWizard({ initialName, onBack: onExit }: { initialName?: stri
                   lines={fees.lines}
                   total={total}
                   heading="Estimated RERA Fee Breakdown"
-                  unpricedNote="Pricing for RERA isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for RERA isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

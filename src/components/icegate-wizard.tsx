@@ -302,7 +302,7 @@ export function IcegateWizard({
       <WizardHero
         eyebrow="DGFT · Form ANF-2A"
         title="ICE GATE Registration"
-        blurb="Guided Cloudcrest BM workspace for the Importer Exporter Code (IEC) filed through the DGFT portal — the unique code every importer or exporter needs, linked to your PAN."
+        blurb="Guided FoundersKite workspace for the Importer Exporter Code (IEC) filed through the DGFT portal — the unique code every importer or exporter needs, linked to your PAN."
         highlights={HIGHLIGHTS}
       />
 
@@ -477,7 +477,7 @@ export function IcegateWizard({
                   lines={fees.lines}
                   total={fees.total}
                   heading="ICE GATE Registration — Fee Breakdown"
-                  unpricedNote="Pricing for this service isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this service isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

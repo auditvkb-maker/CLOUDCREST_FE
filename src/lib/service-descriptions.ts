@@ -27,4 +27,4 @@ const DESCRIPTIONS: Record<string, string> = {
 };
 
 export const describe = (slug: string, title: string, short: string) =>
-  DESCRIPTIONS[slug] ?? `Register your ${short || title} with Cloudcrest's compliance experts, filed end to end.`;
+  DESCRIPTIONS[slug] ?? `Register your ${short || title} with FoundersKite's compliance experts, filed end to end.`;

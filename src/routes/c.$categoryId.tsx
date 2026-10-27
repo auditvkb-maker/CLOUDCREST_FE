@@ -49,7 +49,7 @@ function CategoryComingSoon() {
           <p className="mt-5 text-muted-foreground leading-relaxed">
             We're putting this section together and it isn't open for applications yet.
             Once it opens, the services in it will appear here and you'll be able to file
-            through Cloudcrest exactly as with every other registration.
+            through FoundersKite exactly as with every other registration.
           </p>
 
           <p className="mt-3 text-muted-foreground leading-relaxed">

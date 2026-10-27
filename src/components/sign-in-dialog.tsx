@@ -35,7 +35,7 @@ export function SignInDialog({
       <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-border bg-surface shadow-elev">
         <div className="gradient-hero text-white px-6 py-5 flex items-start justify-between">
           <div>
-            <div className="label-eyebrow text-white/70 mb-1">Cloudcrest BM</div>
+            <div className="label-eyebrow text-white/70 mb-1">FoundersKite</div>
             <h3 className="text-xl font-display font-semibold leading-tight">
               Sign in to continue
             </h3>

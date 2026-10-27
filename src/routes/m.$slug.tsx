@@ -40,7 +40,7 @@ export const Route = createFileRoute("/m/$slug")({
     const label = m?.title ?? titleFromSlug(params.slug);
     return {
       meta: [
-        { title: `${label} — Cloudcrest BM` },
+        { title: `${label} — FoundersKite` },
         {
           name: "description",
           content: m ? `${m.title} desk. ${m.authority} · ${m.form ?? ""}` : `${label} registration desk.`,

@@ -980,7 +980,7 @@ export function TrustStepperWizard({
           <div className="rounded-lg border border-accent/25 bg-accent/6 p-3 flex gap-2">
             <Info className="size-3.5 text-accent shrink-0 mt-0.5" />
             <div className="text-[11px] text-foreground/70 leading-relaxed">
-              Cloudcrest legal associates prepare your trust deed on non-judicial stamp paper and coordinate Sub-Registrar / Charity Commissioner filing in {officeState || state}.
+              FoundersKite legal associates prepare your trust deed on non-judicial stamp paper and coordinate Sub-Registrar / Charity Commissioner filing in {officeState || state}.
             </div>
           </div>
         </div>

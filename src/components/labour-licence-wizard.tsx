@@ -415,7 +415,7 @@ function LabourLicenceStepper({
                   lines={fees.lines}
                   total={fees.total}
                   heading="Estimated Labour Licence Fee Breakdown"
-                  unpricedNote="Pricing for this state isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this state isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

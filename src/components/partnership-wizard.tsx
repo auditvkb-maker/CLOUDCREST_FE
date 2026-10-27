@@ -768,7 +768,7 @@ export function PartnershipStepperWizard({
                       </div>
                     ) : (
                       <div className="text-[13px] text-muted-foreground">
-                        Pricing for this state combination will be finalized by your Cloudcrest BM advisor
+                        Pricing for this state combination will be finalized by your FoundersKite advisor
                         upon review. You can proceed with submission.
                       </div>
                     )}

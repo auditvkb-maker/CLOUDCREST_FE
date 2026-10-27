@@ -103,7 +103,7 @@ const FAQS = [
   },
   {
     q: "Who actually prepares and files the documents?",
-    a: "Qualified professionals — a Chartered Accountant or Company Secretary reviews every submission before it reaches the authority. Cloudcrest is a technology platform that coordinates the filing; the professional review is what stands behind it.",
+    a: "Qualified professionals — a Chartered Accountant or Company Secretary reviews every submission before it reaches the authority. FoundersKite is a technology platform that coordinates the filing; the professional review is what stands behind it.",
   },
   {
     q: "Do I have to re-upload documents for every registration?",

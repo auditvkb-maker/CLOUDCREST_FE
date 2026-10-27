@@ -50,7 +50,7 @@ const mockSingleRecord = {
   reference_no: "CC-REG-100001",
   full_name: "Local Developer",
   mobile: "9999999999",
-  company_name: "Cloudcrest BM Testing",
+  company_name: "FoundersKite Testing",
 };
 
 // Chained query mock resolving to mock records to avoid runtime errors on local calls

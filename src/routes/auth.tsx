@@ -19,7 +19,8 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
-import logo from "@/assets/cloudcrest-logo.png";
+import logo from "@/assets/founderskite-logo.png";
+import logoLight from "@/assets/founderskite-logo-light.png";
 import { z } from "zod";
 
 // Firebase Client Imports
@@ -55,7 +56,7 @@ if (isFirebaseConfigured) {
 type Search = { next?: string; admin?: boolean };
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — Cloudcrest BM" }] }),
+  head: () => ({ meta: [{ title: "Sign in — FoundersKite" }] }),
   validateSearch: (s: Record<string, unknown>): Search => ({
     next: typeof s.next === "string" ? s.next : undefined,
     // Accept the numeric form too — the router coerces `?admin=1` to the number 1,
@@ -337,8 +338,7 @@ function AuthPage() {
           }}
         />
         <Link to="/" className="relative flex items-center gap-3">
-          <img src={logo} alt="Cloudcrest BM" className="h-10 w-auto" />
-          <div className="font-display font-semibold tracking-tight">Cloudcrest BM</div>
+          <img src={logoLight} alt="FoundersKite" className="h-10 w-auto" />
         </Link>
         <div className="relative space-y-6 max-w-md">
           <h1 className="text-4xl font-display font-semibold leading-tight">
@@ -347,7 +347,7 @@ function AuthPage() {
             <span className="text-primary">one secure sign-in away.</span>
           </h1>
           <p className="text-white/70 text-[15px] leading-relaxed">
-            Track every filing, upload documents once, and talk to a Cloudcrest BM advisor — all
+            Track every filing, upload documents once, and talk to a FoundersKite advisor — all
             from a single account.
           </p>
           <ul className="space-y-3 text-sm">
@@ -371,7 +371,7 @@ function AuthPage() {
       <div className="flex items-center justify-center p-6 sm:p-10">
         <div className="w-full max-w-md">
           <Link to="/" className="lg:hidden flex items-center gap-2 mb-8">
-            <img src={logo} alt="Cloudcrest BM" className="h-9 w-auto" />
+            <img src={logo} alt="FoundersKite" className="h-9 w-auto" />
           </Link>
 
           <h2 className="text-2xl font-display font-semibold">
@@ -709,7 +709,7 @@ function AuthPage() {
           )}
 
           <p className="mt-8 text-[11px] text-muted-foreground text-center">
-            By continuing you agree to Cloudcrest BM's Terms &amp; Privacy Policy.
+            By continuing you agree to FoundersKite's Terms &amp; Privacy Policy.
           </p>
         </div>
       </div>

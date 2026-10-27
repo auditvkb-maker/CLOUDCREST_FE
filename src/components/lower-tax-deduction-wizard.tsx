@@ -241,7 +241,7 @@ export function LowerTaxDeductionWizard({
       <WizardHero
         eyebrow="Income Tax · Form No. 128"
         title="Lower Tax Deduction Certificate"
-        blurb="Guided Cloudcrest BM workspace for a Nil / Lower TDS certificate under Section 395(1) of the Income-tax Act, 2025 — so tax is deducted at the rate your actual liability justifies instead of the standard one."
+        blurb="Guided FoundersKite workspace for a Nil / Lower TDS certificate under Section 395(1) of the Income-tax Act, 2025 — so tax is deducted at the rate your actual liability justifies instead of the standard one."
         highlights={HIGHLIGHTS}
       />
 
@@ -360,7 +360,7 @@ export function LowerTaxDeductionWizard({
                   lines={fees.lines}
                   total={fees.total}
                   heading="Lower Tax Deduction Certificate — Fee Breakdown"
-                  unpricedNote="Pricing for this service isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this service isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

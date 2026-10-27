@@ -28,7 +28,7 @@ type AdminView = "registrations" | "tickets" | "notifications" | "catalog" | "em
 type Search = { service?: string; view?: AdminView };
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Admin Console — Cloudcrest BM" }] }),
+  head: () => ({ meta: [{ title: "Admin Console — FoundersKite" }] }),
   validateSearch: (s: Record<string, unknown>): Search => ({
     service: typeof s.service === "string" ? s.service : undefined,
     view:
@@ -100,7 +100,7 @@ function AdminPage() {
           </div>
           <h1 className="text-xl font-display font-semibold">Admin access required</h1>
           <p className="text-sm text-muted-foreground mt-2">
-            This console is restricted to Cloudcrest BM administrators. Your account does not have
+            This console is restricted to FoundersKite administrators. Your account does not have
             admin privileges.
           </p>
         </div>

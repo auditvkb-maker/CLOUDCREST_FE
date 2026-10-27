@@ -236,7 +236,7 @@ export function NonDeductionDeclarationWizard({
       <WizardHero
         eyebrow="Income Tax · Form 121"
         title="Declaration for Non-Deduction of Tax"
-        blurb="Guided Cloudcrest BM workspace for Form 121 — the self-declaration to a payer that your estimated tax liability for the Tax Year is Nil, so TDS is not deducted. Replaces the old Form 15G / 15H."
+        blurb="Guided FoundersKite workspace for Form 121 — the self-declaration to a payer that your estimated tax liability for the Tax Year is Nil, so TDS is not deducted. Replaces the old Form 15G / 15H."
         highlights={HIGHLIGHTS}
       />
 
@@ -355,7 +355,7 @@ export function NonDeductionDeclarationWizard({
                   lines={fees.lines}
                   total={fees.total}
                   heading="Non-Deduction Declaration — Fee Breakdown"
-                  unpricedNote="Pricing for this service isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this service isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

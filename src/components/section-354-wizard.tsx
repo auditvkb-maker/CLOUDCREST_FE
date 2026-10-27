@@ -264,7 +264,7 @@ export function Section354Wizard({
       <WizardHero
         eyebrow="Certificate of Donation · Form No. 107"
         title="Section 354 Approval"
-        blurb="Guided Cloudcrest BM workspace for approval under Section 354 of the Income-tax Act, 2025 — the successor to Section 80G — so donations to a registered non-profit are deductible for the donor."
+        blurb="Guided FoundersKite workspace for approval under Section 354 of the Income-tax Act, 2025 — the successor to Section 80G — so donations to a registered non-profit are deductible for the donor."
         highlights={HIGHLIGHTS}
       />
 
@@ -389,7 +389,7 @@ export function Section354Wizard({
                   lines={fees.lines}
                   total={fees.total}
                   heading="Section 354 Approval — Fee Breakdown"
-                  unpricedNote="Pricing for this service isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this service isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

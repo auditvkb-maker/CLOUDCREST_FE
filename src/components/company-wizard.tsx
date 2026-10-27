@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { blockNegativeKeys, nonNegative } from "@/lib/number-input";
 
-// Cloudcrest advisor contact — one place so the call / WhatsApp links stay in sync.
+// FoundersKite advisor contact — one place so the call / WhatsApp links stay in sync.
 const ADVISOR_PHONE_DISPLAY = "+91 89770 79433";
 const ADVISOR_TEL = "tel:+918977079433";
 const ADVISOR_WHATSAPP = "https://wa.me/918977079433";
@@ -1385,7 +1385,7 @@ export function CompanyWizard({
             <div className="mt-7 rounded-lg border border-accent/25 bg-accent/6 p-3 flex gap-2">
               <Info className="size-3.5 text-accent shrink-0 mt-0.5" />
               <div className="text-[11px] text-foreground/70 leading-relaxed">
-                Cloudcrest BM associates handle filing end-to-end and deliver all registration certificates upon company incorporation.
+                FoundersKite associates handle filing end-to-end and deliver all registration certificates upon company incorporation.
               </div>
             </div>
           </div>
@@ -1450,7 +1450,7 @@ export function CompanyWizard({
 
       {/* "How would you like to proceed?" popup — opened by clicking a type card.
           "Fill on your own" advances to the Structure step; the other two hand off
-          to a Cloudcrest advisor by phone call or WhatsApp. */}
+          to a FoundersKite advisor by phone call or WhatsApp. */}
       {proceedOpen && (
         <div
           className="fixed inset-0 z-50 grid place-items-center p-4 bg-black/50 backdrop-blur-sm"
@@ -1468,7 +1468,7 @@ export function CompanyWizard({
                 <p className="text-[12px] text-muted-foreground mt-1">
                   Continue with{" "}
                   <span className="font-medium text-foreground/80">{selected.title}</span>{" "}
-                  yourself, or let a Cloudcrest advisor handle the filing for you.
+                  yourself, or let a FoundersKite advisor handle the filing for you.
                 </p>
               </div>
               <button

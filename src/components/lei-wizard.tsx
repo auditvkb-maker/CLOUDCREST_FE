@@ -284,7 +284,7 @@ export function LeiWizard({ initialName, onBack: onExit }: { initialName?: strin
       <WizardHero
         eyebrow="GLEIF / LEIL · Legal Entity Identifier"
         title="Global LEI Registration"
-        blurb="Guided Cloudcrest BM workspace for a Legal Entity Identifier — the entity's legal profile, its GLEIF status and registry, the parent declaration and the authorised signatory, through to your 20-character LEI."
+        blurb="Guided FoundersKite workspace for a Legal Entity Identifier — the entity's legal profile, its GLEIF status and registry, the parent declaration and the authorised signatory, through to your 20-character LEI."
         highlights={HIGHLIGHTS}
       />
 
@@ -492,7 +492,7 @@ export function LeiWizard({ initialName, onBack: onExit }: { initialName?: strin
                   lines={fees.lines}
                   total={total}
                   heading="Estimated LEI Fee Breakdown"
-                  unpricedNote="Pricing for LEI isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for LEI isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

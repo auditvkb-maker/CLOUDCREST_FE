@@ -94,7 +94,7 @@ const SITE_URL = "https://cloudcrestwebsite.vercel.app";
 const ORGANISATION_JSONLD = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  name: "Cloudcrest Business Management",
+  name: "FoundersKite",
   url: SITE_URL,
   image: `${SITE_URL}/favicon.png`,
   description:
@@ -135,16 +135,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // registration", "GST registration", a city — rather than for how the
       // product describes itself internally. Google truncates around 155
       // characters, so the useful words come first.
-      { title: "Company Registration, GST & Trademark Filing in India | Cloudcrest" },
+      { title: "Company Registration, GST & Trademark Filing in India | FoundersKite" },
       {
         name: "description",
         content:
           "Register a Private Limited Company, LLP, GST, MSME or trademark in India. Free MCA name check, documents uploaded once, every filing reviewed by a CA or CS. Hyderabad-based, serving all states.",
       },
-      { name: "author", content: "Cloudcrest Business Management" },
+      { name: "author", content: "FoundersKite" },
       { name: "robots", content: "index, follow" },
 
-      { property: "og:site_name", content: "Cloudcrest" },
+      { property: "og:site_name", content: "FoundersKite" },
       { property: "og:title", content: "Company Registration, GST & Trademark Filing in India" },
       {
         property: "og:description",

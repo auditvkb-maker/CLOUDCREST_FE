@@ -604,7 +604,7 @@ export function NgoDarpanWizard({ initialName, onBack: onExit }: { initialName?:
                     ) : (
                       // The catalog row has no price set — say so rather than quoting ₹0.
                       <div className="text-[13px] text-muted-foreground">
-                        Pricing for NGO Darpan isn't published yet. Your Cloudcrest BM advisor will
+                        Pricing for NGO Darpan isn't published yet. Your FoundersKite advisor will
                         confirm the fee before any payment — you can still submit the application now.
                       </div>
                     )}

@@ -7,7 +7,7 @@ import { SupportFab } from "@/components/support-fab";
 import { useState, useRef, useEffect, createContext, useContext, type ReactNode } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { ConfirmDialog } from "@/components/confirm-dialog";
-import logo from "@/assets/cloudcrest-logo.png";
+import logo from "@/assets/founderskite-logo.png";
 import { categorySlug } from "@/lib/category-slug";
 
 /**
@@ -331,7 +331,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
         <div className="max-w-[1440px] mx-auto flex items-center justify-between px-6 h-11 text-xs">
           <div className="flex items-center gap-2">
             <span className="mono uppercase tracking-widest text-[10px] text-navy-foreground/60">
-              Cloudcrest BM · Compliance Ops
+              FoundersKite · Compliance Ops
             </span>
             <span className="hidden sm:inline text-navy-foreground/30">/</span>
             <span className="hidden sm:inline text-navy-foreground/70">
@@ -371,7 +371,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
               <>
                 <img
                   src={logo}
-                  alt="Cloudcrest BM"
+                  alt="FoundersKite"
                   className="h-9 w-auto object-contain transition-transform group-hover:scale-[1.02]"
                 />
                 <div className="leading-tight ml-1 hidden sm:block">
@@ -1157,7 +1157,7 @@ function AccountMenu() {
 
       <ConfirmDialog
         open={confirmSignOut}
-        title="Sign out of Cloudcrest?"
+        title="Sign out of FoundersKite?"
         message="You'll need to sign in again to access your dashboard, applications and documents."
         confirmLabel="Sign out"
         cancelLabel="Stay signed in"

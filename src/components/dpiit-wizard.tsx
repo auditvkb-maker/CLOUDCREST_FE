@@ -273,7 +273,7 @@ export function DpiitWizard({
       <WizardHero
         eyebrow="DPIIT · Startup India"
         title="Startup India / DPIIT Recognition"
-        blurb="Guided Cloudcrest BM workspace for DPIIT recognition under Startup India — the certificate that unlocks tax exemptions, easier compliance and funding access for your startup."
+        blurb="Guided FoundersKite workspace for DPIIT recognition under Startup India — the certificate that unlocks tax exemptions, easier compliance and funding access for your startup."
         highlights={HIGHLIGHTS}
       />
 
@@ -444,7 +444,7 @@ export function DpiitWizard({
                   lines={fees.lines}
                   total={fees.total}
                   heading="DPIIT Recognition — Fee Breakdown"
-                  unpricedNote="Pricing for this service isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this service isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

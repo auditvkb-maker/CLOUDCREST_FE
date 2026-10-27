@@ -506,7 +506,7 @@ export function LutWizard({
                   lines={fees.lines}
                   total={fees.total}
                   heading="Estimated LUT Filing Fee Breakdown"
-                  unpricedNote="Pricing for this service isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this service isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

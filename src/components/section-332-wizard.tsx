@@ -300,7 +300,7 @@ export function Section332Wizard({
       <WizardHero
         eyebrow="Income Tax · Form 104 / Form 105"
         title="Section 332 Registration"
-        blurb="Guided Cloudcrest BM workspace for registering a trust, society, Section 8 company or institution as a Registered Non-Profit Organisation under Section 332 of the Income-tax Act, 2025 — the erstwhile Sections 12A / 12AA / 12AB."
+        blurb="Guided FoundersKite workspace for registering a trust, society, Section 8 company or institution as a Registered Non-Profit Organisation under Section 332 of the Income-tax Act, 2025 — the erstwhile Sections 12A / 12AA / 12AB."
         highlights={HIGHLIGHTS}
       />
 
@@ -453,7 +453,7 @@ export function Section332Wizard({
                   lines={fees.lines}
                   total={fees.total}
                   heading="Section 332 Registration — Fee Breakdown"
-                  unpricedNote="Pricing for this service isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this service isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

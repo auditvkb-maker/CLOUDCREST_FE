@@ -562,7 +562,7 @@ function RegistrationDetailDialog({
                 {adminRemarks.length > 0 && (
                   <div className="p-4 rounded-xl border border-primary/30 bg-primary/[0.04] space-y-2.5 shadow-sm">
                     <div className="text-xs font-bold flex items-center gap-2 text-primary">
-                      <Info className="size-4 shrink-0" /> Updates from Cloudcrest
+                      <Info className="size-4 shrink-0" /> Updates from FoundersKite
                     </div>
                     <ul className="space-y-2 pl-6">
                       {adminRemarks.map((rem, i) => (
@@ -596,7 +596,7 @@ function RegistrationDetailDialog({
                       <FileText className="size-3.5 text-primary" /> Application Documents Checklist
                     </h4>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                      Upload all required documents for your registration to be processed by Cloudcrest associates.
+                      Upload all required documents for your registration to be processed by FoundersKite associates.
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">

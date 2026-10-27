@@ -42,7 +42,7 @@ export function AdvisorProceedDialog({
                 <>
                   Continue with{" "}
                   <span className="font-medium text-foreground/80">{title}</span>{" "}
-                  yourself, or let a Cloudcrest advisor handle the filing for you.
+                  yourself, or let a FoundersKite advisor handle the filing for you.
                 </>
               )}
             </p>

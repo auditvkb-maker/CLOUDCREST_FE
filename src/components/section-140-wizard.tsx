@@ -249,7 +249,7 @@ export function Section140Wizard({
       <WizardHero
         eyebrow="Income Tax · Inter-Ministerial Board"
         title="IMB Certificate (Section 140)"
-        blurb="Guided Cloudcrest BM workspace for the Inter-Ministerial Board certificate an eligible start-up needs to claim the 100% deduction under Section 140 of the Income-tax Act, 2025 — the erstwhile Section 80-IAC."
+        blurb="Guided FoundersKite workspace for the Inter-Ministerial Board certificate an eligible start-up needs to claim the 100% deduction under Section 140 of the Income-tax Act, 2025 — the erstwhile Section 80-IAC."
         highlights={HIGHLIGHTS}
       />
 
@@ -388,7 +388,7 @@ export function Section140Wizard({
                   lines={fees.lines}
                   total={fees.total}
                   heading="IMB Certificate (Section 140) — Fee Breakdown"
-                  unpricedNote="Pricing for this service isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this service isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

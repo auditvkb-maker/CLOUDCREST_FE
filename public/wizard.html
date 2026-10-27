@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cloudcrest BM - Business Registration Wizard</title>
+  <title>FoundersKite - Business Registration Wizard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -28,7 +28,7 @@
 <header class="sticky top-0 z-40 bg-navy text-white shadow-lg">
   <div class="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
     <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-saffron to-orange-500 font-display text-lg font-black">CB</div>
-    <div><div class="font-display text-xl font-black">Cloudcrest <span class="text-saffron">BM</span></div><div class="text-xs text-slate-300">Business Management Private Limited</div></div>
+    <div><div class="font-display text-xl font-black">FoundersKite</div><div class="text-xs text-slate-300">Business Management Private Limited</div></div>
     <div class="ml-auto hidden items-center gap-3 text-sm md:flex"><a class="rounded-lg bg-white/10 px-3 py-2 hover:bg-white/15" href="tel:+918977079433">📞 +91 89770 79433</a><a class="rounded-lg bg-white/10 px-3 py-2 hover:bg-white/15" href="mailto:cloudcrestbm@gmail.com">✉️ cloudcrestbm@gmail.com</a></div>
   </div>
 </header>
@@ -44,7 +44,7 @@
 </main>
 <footer class="bg-navy px-4 py-8 text-white">
   <div class="mx-auto grid max-w-7xl gap-5 sm:grid-cols-3">
-    <div><div class="font-display text-xl font-black">Cloudcrest <span class="text-saffron">BM</span></div><p class="mt-2 text-sm text-slate-300">Registration, compliance, licensing and business advisory support.</p></div>
+    <div><div class="font-display text-xl font-black">FoundersKite</div><p class="mt-2 text-sm text-slate-300">Registration, compliance, licensing and business advisory support.</p></div>
     <div><div class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Phone / WhatsApp</div><a class="mt-1 block font-bold text-saffron" href="tel:+918977079433">+91 89770 79433</a></div>
     <div><div class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Email</div><a class="mt-1 block font-bold text-saffron" href="mailto:cloudcrestbm@gmail.com">cloudcrestbm@gmail.com</a></div>
   </div>
@@ -361,8 +361,8 @@ function renderLLPStep(){const p=el('lPanel');
 function lnav(last='Next'){return `<div class="nav-row mt-6 flex justify-between border-t border-line pt-5"><button class="btn btn-back" onclick="lPrev()">Previous</button><button class="btn btn-purple" onclick="lNext()">${last}</button></div>`}
 function lNext(){clearErrs(); if(!lSave())return; if(LS.step<7){LS.step++;renderLLP()}} function lPrev(){if(LS.step>1){LS.step--;renderLLP()}}
 function lSave(){if(LS.step===2){LS.names=[val('ln1'),val('ln2'),val('ln3')];if(!LS.names[0])return setErr('lErr','Please enter at least one LLP name.'),false;if(!/\bllp\b|limited liability partnership/i.test(LS.names[0]))return setErr('lErr','LLP name must end with LLP or Limited Liability Partnership.'),false} if(LS.step===3){LS.main=val('lMain');LS.industry=val('lIndustry');LS.partners=+val('lPartners');if(!LS.main)return setErr('lErr','Please enter LLP business activity.'),false;if(LS.partners<2)return setErr('lErr','LLP requires minimum 2 partners.'),false} if(LS.step===4){LS.state=val('lState');LS.city=val('lCity');LS.pin=val('lPin');LS.address=val('lAddress');if(!LS.state||!LS.city||!LS.address||!/^[0-9]{6}$/.test(LS.pin))return setErr('lErr','Please complete office details with valid 6-digit PIN.'),false} return true}
-function downloadSummary(type,title){const node=el('summary-'+type);if(!node)return;const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>body{font-family:Arial,sans-serif;max-width:850px;margin:0 auto;padding:32px;color:#0F1F3D}.summary-row{display:grid;grid-template-columns:220px 1fr;border-bottom:1px solid #ddd;padding:8px 0}h1{border-bottom:3px solid #F59E0B;padding-bottom:8px}</style></head><body><h1>${title}</h1>${node.innerHTML}<p style="margin-top:24px;background:#f1f5f9;padding:12px;border-radius:8px">Cloudcrest BM | ${CONTACT.phone} | ${CONTACT.email}</p></body></html>`;const blob=new Blob([html],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=title.replaceAll(' ','_')+'_Cloudcrest.html';a.click();URL.revokeObjectURL(a.href)}
-function openWhatsApp(){window.open('https://wa.me/918977079433?text='+encodeURIComponent('Hello Cloudcrest BM, I completed the business registration wizard and need assistance.'),'_blank')}
+function downloadSummary(type,title){const node=el('summary-'+type);if(!node)return;const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>body{font-family:Arial,sans-serif;max-width:850px;margin:0 auto;padding:32px;color:#0F1F3D}.summary-row{display:grid;grid-template-columns:220px 1fr;border-bottom:1px solid #ddd;padding:8px 0}h1{border-bottom:3px solid #F59E0B;padding-bottom:8px}</style></head><body><h1>${title}</h1>${node.innerHTML}<p style="margin-top:24px;background:#f1f5f9;padding:12px;border-radius:8px">FoundersKite | ${CONTACT.phone} | ${CONTACT.email}</p></body></html>`;const blob=new Blob([html],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=title.replaceAll(' ','_')+'_FoundersKite.html';a.click();URL.revokeObjectURL(a.href)}
+function openWhatsApp(){window.open('https://wa.me/918977079433?text='+encodeURIComponent('Hello FoundersKite, I completed the business registration wizard and need assistance.'),'_blank')}
 init();
 </script>
 </body>

@@ -139,7 +139,7 @@ export function ServiceFlow() {
                 viewBox={`0 0 ${viewW} ${VIEW_H}`}
                 className="w-full h-auto"
                 role="img"
-                aria-label={`Cloudcrest connects to ${families.map((g) => g.label).join(", ")}`}
+                aria-label={`FoundersKite connects to ${families.map((g) => g.label).join(", ")}`}
               >
                 {/* Paths first, so the nodes sit over their ends. */}
                 {families.map((g, i) => (
@@ -181,7 +181,7 @@ export function ServiceFlow() {
                   textAnchor="middle"
                   className="flow-origin-label fill-white font-semibold"
                 >
-                  Cloudcrest
+                  FoundersKite
                 </text>
 
                 {/* Destinations: the catalog's own groups, with their real counts. */}

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
     // which is the reason to click this result over the one above it. The old
     // copy said "20+ registrations" when the catalog had grown past fifty.
     meta: [
-      { title: "Company Registration, GST & Trademark Filing in India | Cloudcrest" },
+      { title: "Company Registration, GST & Trademark Filing in India | FoundersKite" },
       {
         name: "description",
         content:

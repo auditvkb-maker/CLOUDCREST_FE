@@ -431,7 +431,7 @@ export function RegisterDialog({
             <div>
               <h4 className="text-lg font-semibold">Sign in to continue</h4>
               <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                Create a free Cloudcrest BM account to submit your {serviceTitle} application and track it in your dashboard.
+                Create a free FoundersKite account to submit your {serviceTitle} application and track it in your dashboard.
               </p>
             </div>
             <button onClick={goSignIn} className="mt-2 px-6 py-2.5 rounded-lg gradient-brand text-white text-sm font-semibold shadow-brand flex items-center gap-2">
@@ -446,7 +446,7 @@ export function RegisterDialog({
             <div>
               <h4 className="text-lg font-semibold">Application received</h4>
               <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                Reference <span className="mono text-foreground font-semibold">{refNo}</span>. A Cloudcrest BM associate will call {phone} within 2 business hours.
+                Reference <span className="mono text-foreground font-semibold">{refNo}</span>. A FoundersKite associate will call {phone} within 2 business hours.
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-2">
@@ -645,7 +645,7 @@ export function RegisterDialog({
 
             <div className="flex items-center gap-2 text-[11px] text-muted-foreground border-t border-border pt-4">
               <ShieldCheck className="size-3.5 text-success" />
-              Your documents are encrypted and shared only with your Cloudcrest BM advisor.
+              Your documents are encrypted and shared only with your FoundersKite advisor.
             </div>
 
             {error && (

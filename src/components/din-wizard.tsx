@@ -171,7 +171,7 @@ export function DinWizard({ initialName, onBack: onExit }: { initialName?: strin
       <WizardHero
         eyebrow="MCA · Form DIR-3"
         title="Director Identification Number"
-        blurb="Guided Cloudcrest BM workspace for a DIN — the unique 8-digit number the MCA allots to every person who wants to be a director in a company or a designated partner in an LLP. Allotted once, yours for life."
+        blurb="Guided FoundersKite workspace for a DIN — the unique 8-digit number the MCA allots to every person who wants to be a director in a company or a designated partner in an LLP. Allotted once, yours for life."
         highlights={HIGHLIGHTS}
       />
 
@@ -270,7 +270,7 @@ export function DinWizard({ initialName, onBack: onExit }: { initialName?: strin
                   lines={fees.lines}
                   total={total}
                   heading="Estimated DIN Fee Breakdown"
-                  unpricedNote="Pricing for DIN isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for DIN isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

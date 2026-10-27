@@ -1,4 +1,4 @@
-# Cloudcrest — allow everything except the signed-in areas, which are
+# FoundersKite — allow everything except the signed-in areas, which are
 # useless to a crawler and would only dilute the indexed pages.
 User-agent: *
 Allow: /

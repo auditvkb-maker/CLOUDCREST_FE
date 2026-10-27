@@ -8,7 +8,7 @@ import { ProfileBanner } from "@/components/profile-banner";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 
 export const Route = createFileRoute("/_authenticated/profile")({
-  head: () => ({ meta: [{ title: "My Account — Cloudcrest BM" }] }),
+  head: () => ({ meta: [{ title: "My Account — FoundersKite" }] }),
   component: ProfileLayout,
 });
 
@@ -98,7 +98,7 @@ function ProfileLayout() {
 
       <ConfirmDialog
         open={confirmSignOut}
-        title="Sign out of Cloudcrest?"
+        title="Sign out of FoundersKite?"
         message="You'll need to sign in again to access your dashboard, applications and documents."
         confirmLabel="Sign out"
         cancelLabel="Stay signed in"

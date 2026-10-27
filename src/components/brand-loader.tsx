@@ -1,7 +1,7 @@
-import logo from "@/assets/cloudcrest-logo.png";
+import logo from "@/assets/founderskite-logo.png";
 
 /**
- * Company-branded loading indicator: the Cloudcrest mark on a soft disc,
+ * Company-branded loading indicator: the FoundersKite mark on a soft disc,
  * wrapped by a spinning brand ring. Use `fullscreen` for route transitions and
  * the inline variant (default) for section-level loading states.
  */
@@ -26,7 +26,7 @@ export function BrandLoader({
           <span className="absolute inset-[7px] rounded-full bg-surface shadow-elev" />
           <img
             src={logo}
-            alt="Cloudcrest"
+            alt="FoundersKite"
             className="brand-loader-mark relative size-11 object-contain"
           />
         </div>

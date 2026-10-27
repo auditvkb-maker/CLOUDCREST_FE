@@ -507,7 +507,7 @@ function ApplicationPanel({
             </>
           ) : (
             <Empty>
-              Fees for this service haven't been published yet. A Cloudcrest BM advisor will share a
+              Fees for this service haven't been published yet. A FoundersKite advisor will share a
               quote after reviewing your application.
             </Empty>
           )}

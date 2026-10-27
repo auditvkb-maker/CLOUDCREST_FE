@@ -440,7 +440,7 @@ export function DscWizard({
                   lines={fees.lines}
                   total={total}
                   heading={`Estimated ${selectedType.title} Fee Breakdown`}
-                  unpricedNote="Pricing for DSC will be finalized by your Cloudcrest advisor."
+                  unpricedNote="Pricing for DSC will be finalized by your FoundersKite advisor."
                 />
               )}
 

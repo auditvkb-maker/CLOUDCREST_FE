@@ -254,7 +254,7 @@ export function Form10aWizard({
       <WizardHero
         eyebrow="Income Tax e-Filing Portal · Form 104"
         title="Form 104 (Provisional Registration)"
-        blurb="Guided Cloudcrest BM workspace for Form 104 — the provisional registration a new, unregistered non-profit files under Section 332(3) of the Income-tax Act, 2025 before its activities have commenced."
+        blurb="Guided FoundersKite workspace for Form 104 — the provisional registration a new, unregistered non-profit files under Section 332(3) of the Income-tax Act, 2025 before its activities have commenced."
         highlights={HIGHLIGHTS}
       />
 
@@ -379,7 +379,7 @@ export function Form10aWizard({
                   lines={fees.lines}
                   total={fees.total}
                   heading="Form 104 — Fee Breakdown"
-                  unpricedNote="Pricing for this service isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this service isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

@@ -401,7 +401,7 @@ const GST_TYPES: RegistrationType[] = [
       "UN Bodies / Embassies / Other Notified Persons (UIN)",
     ],
     about:
-      "Three registrations that fall outside the standard categories are handled together here, because they ask for the same set of documents:\n\n• Non-Resident Online Services Provider — an OIDAR supplier providing online information and database access or retrieval services into India from outside the country.\n• SEZ Developer / SEZ Unit — a developer or a unit in a Special Economic Zone, which registers separately from any other place of business in the same state.\n• UN Bodies, Embassies and Other Notified Persons — who obtain a Unique Identity Number (UIN) to claim refund of the tax paid on their inward supplies.\n\nYour Cloudcrest BM advisor confirms which of the three applies and files on the correct form.",
+      "Three registrations that fall outside the standard categories are handled together here, because they ask for the same set of documents:\n\n• Non-Resident Online Services Provider — an OIDAR supplier providing online information and database access or retrieval services into India from outside the country.\n• SEZ Developer / SEZ Unit — a developer or a unit in a Special Economic Zone, which registers separately from any other place of business in the same state.\n• UN Bodies, Embassies and Other Notified Persons — who obtain a Unique Identity Number (UIN) to claim refund of the tax paid on their inward supplies.\n\nYour FoundersKite advisor confirms which of the three applies and files on the correct form.",
     who: [
       "Non-resident online services (OIDAR) providers supplying into India from outside the country.",
       "SEZ developers and SEZ units.",
@@ -775,7 +775,7 @@ function GstStepper({
                   lines={fees.lines}
                   total={fees.total}
                   heading="Estimated GST Registration Fee Breakdown"
-                  unpricedNote="Pricing for this registration type isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this registration type isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

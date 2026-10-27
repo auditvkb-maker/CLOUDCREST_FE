@@ -272,7 +272,7 @@ export function IecWizard({ initialName, onBack: onExit }: { initialName?: strin
       <WizardHero
         eyebrow="DGFT · Form ANF-2A"
         title="IEC Import-Export Registration"
-        blurb="Guided Cloudcrest BM workspace for the DGFT Importer-Exporter Code — firm profile, nature of operations, the official bank account and the authorised signatory, through to your IEC certificate."
+        blurb="Guided FoundersKite workspace for the DGFT Importer-Exporter Code — firm profile, nature of operations, the official bank account and the authorised signatory, through to your IEC certificate."
         highlights={HIGHLIGHTS}
       />
 
@@ -456,7 +456,7 @@ export function IecWizard({ initialName, onBack: onExit }: { initialName?: strin
                   lines={fees.lines}
                   total={total}
                   heading="Estimated IEC Fee Breakdown"
-                  unpricedNote="Pricing for IEC isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for IEC isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 

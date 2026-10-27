@@ -5,17 +5,17 @@ import { TeamPage } from "@/components/team-page";
 export const Route = createFileRoute("/team")({
   head: () => ({
     meta: [
-      { title: "Our Team — Chartered Accountants & Company Secretary | Cloudcrest" },
+      { title: "Our Team — Chartered Accountants & Company Secretary | FoundersKite" },
       {
         name: "description",
         content:
           "Meet the Chartered Accountants and Company Secretary who prepare and file your registrations — Ind AS, taxation, company law, GST and corporate governance.",
       },
-      { property: "og:title", content: "Our Team | Cloudcrest" },
+      { property: "og:title", content: "Our Team | FoundersKite" },
       {
         property: "og:description",
         content:
-          "The Chartered Accountants and Company Secretary behind every Cloudcrest filing.",
+          "The Chartered Accountants and Company Secretary behind every FoundersKite filing.",
       },
     ],
   }),

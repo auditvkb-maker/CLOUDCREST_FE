@@ -870,7 +870,7 @@ export function LlpWizard({ initialName }: { initialName?: string }) {
             <div className="mt-7 rounded-lg border border-accent/25 bg-accent/6 p-3 flex gap-2">
               <Info className="size-3.5 text-accent shrink-0 mt-0.5" />
               <div className="text-[11px] text-foreground/70 leading-relaxed">
-                Cloudcrest BM associates handle filing end-to-end and deliver all registration certificates upon LLP incorporation.
+                FoundersKite associates handle filing end-to-end and deliver all registration certificates upon LLP incorporation.
               </div>
             </div>
           </div>

@@ -285,7 +285,7 @@ export function RcmcWizard({
       <WizardHero
         eyebrow="DGFT e-RCMC"
         title="RCMC (Registration-cum-Membership Certificate)"
-        blurb="Guided Cloudcrest BM workspace for your Registration-cum-Membership Certificate (RCMC) — the certificate that connects your export business with the relevant Export Promotion Council or Commodity Board, filed through DGFT's e-RCMC system."
+        blurb="Guided FoundersKite workspace for your Registration-cum-Membership Certificate (RCMC) — the certificate that connects your export business with the relevant Export Promotion Council or Commodity Board, filed through DGFT's e-RCMC system."
         highlights={HIGHLIGHTS}
       />
 
@@ -406,7 +406,7 @@ export function RcmcWizard({
                   lines={fees.lines}
                   total={fees.total}
                   heading="RCMC — Fee Breakdown"
-                  unpricedNote="Pricing for this service isn't published yet. Your Cloudcrest BM advisor will confirm the fee before any payment — you can still submit the application now."
+                  unpricedNote="Pricing for this service isn't published yet. Your FoundersKite advisor will confirm the fee before any payment — you can still submit the application now."
                 />
               )}
 
