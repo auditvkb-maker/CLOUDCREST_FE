@@ -1,40 +1,55 @@
-import { ClosureModule, isClosureSlug } from "@/components/closure-wizard";
-import { ConversionModule } from "@/components/conversion-wizard";
-import { CompanyWizard } from "@/components/company-wizard";
-import { LlpWizard } from "@/components/llp-wizard";
-import { GstWizard } from "@/components/gst-wizard";
-import { LutModule } from "@/components/lut-wizard";
-import { LowerTaxDeductionModule } from "@/components/lower-tax-deduction-wizard";
-import { Section140Module } from "@/components/section-140-wizard";
-import { Section332Module } from "@/components/section-332-wizard";
-import { Section354Module } from "@/components/section-354-wizard";
-import { Form10aModule } from "@/components/form-10a-wizard";
-import { NonDeductionDeclarationModule } from "@/components/non-deduction-declaration-wizard";
-import { RcmcModule } from "@/components/rcmc-wizard";
-import { IcegateModule } from "@/components/icegate-wizard";
-import { DpiitModule } from "@/components/dpiit-wizard";
-import { PanTanModule } from "@/components/pan-tan-wizard";
-import { PartnershipWizard } from "@/components/partnership-wizard";
-import { SocietyWizard } from "@/components/society-wizard";
-import { HufWizard } from "@/components/huf-wizard";
-import { LabourLicenceWizard } from "@/components/labour-licence-wizard";
-import { ProfessionalTaxWizard } from "@/components/professional-tax-wizard";
-import { TradeLicenceWizard } from "@/components/trade-licence-wizard";
-import { EmployerRegistrationModule } from "@/components/employer-registration-wizard";
-import { TrustWizard } from "@/components/trust-wizard";
-import { SoleProprietorshipWizard } from "@/components/sole-proprietorship-wizard";
-import { MsmeModule } from "@/components/msme-wizard";
-import { NgoDarpanModule } from "@/components/ngo-darpan-wizard";
-import { DinModule } from "@/components/din-wizard";
-import { IecModule } from "@/components/iec-wizard";
-import { LeiModule } from "@/components/lei-wizard";
-import { ReraModule } from "@/components/rera-wizard";
-import { DscModule } from "@/components/dsc-wizard";
+import { lazy, Suspense } from "react";
+import { BrandLoader } from "@/components/brand-loader";
 import { DepartmentPage } from "@/components/department-page";
 import { ServiceDetailPage } from "@/components/service-detail-page";
 import { DEPARTMENT_SLUGS } from "@/lib/modules";
 
-export function ModulePage({
+const ClosureRoute = lazy(() => import("@/components/closure-wizard").then((m) => ({ default: m.ClosureRoute })));
+const ConversionModule = lazy(() => import("@/components/conversion-wizard").then((m) => ({ default: m.ConversionModule })));
+const CompanyWizard = lazy(() => import("@/components/company-wizard").then((m) => ({ default: m.CompanyWizard })));
+const LlpWizard = lazy(() => import("@/components/llp-wizard").then((m) => ({ default: m.LlpWizard })));
+const GstWizard = lazy(() => import("@/components/gst-wizard").then((m) => ({ default: m.GstWizard })));
+const LutModule = lazy(() => import("@/components/lut-wizard").then((m) => ({ default: m.LutModule })));
+const LowerTaxDeductionModule = lazy(() => import("@/components/lower-tax-deduction-wizard").then((m) => ({ default: m.LowerTaxDeductionModule })));
+const Section140Module = lazy(() => import("@/components/section-140-wizard").then((m) => ({ default: m.Section140Module })));
+const Section332Module = lazy(() => import("@/components/section-332-wizard").then((m) => ({ default: m.Section332Module })));
+const Section354Module = lazy(() => import("@/components/section-354-wizard").then((m) => ({ default: m.Section354Module })));
+const Form10aModule = lazy(() => import("@/components/form-10a-wizard").then((m) => ({ default: m.Form10aModule })));
+const NonDeductionDeclarationModule = lazy(() => import("@/components/non-deduction-declaration-wizard").then((m) => ({ default: m.NonDeductionDeclarationModule })));
+const RcmcModule = lazy(() => import("@/components/rcmc-wizard").then((m) => ({ default: m.RcmcModule })));
+const IcegateModule = lazy(() => import("@/components/icegate-wizard").then((m) => ({ default: m.IcegateModule })));
+const DpiitModule = lazy(() => import("@/components/dpiit-wizard").then((m) => ({ default: m.DpiitModule })));
+const PanTanModule = lazy(() => import("@/components/pan-tan-wizard").then((m) => ({ default: m.PanTanModule })));
+const PartnershipWizard = lazy(() => import("@/components/partnership-wizard").then((m) => ({ default: m.PartnershipWizard })));
+const SocietyWizard = lazy(() => import("@/components/society-wizard").then((m) => ({ default: m.SocietyWizard })));
+const HufWizard = lazy(() => import("@/components/huf-wizard").then((m) => ({ default: m.HufWizard })));
+const LabourLicenceWizard = lazy(() => import("@/components/labour-licence-wizard").then((m) => ({ default: m.LabourLicenceWizard })));
+const ProfessionalTaxWizard = lazy(() => import("@/components/professional-tax-wizard").then((m) => ({ default: m.ProfessionalTaxWizard })));
+const TradeLicenceWizard = lazy(() => import("@/components/trade-licence-wizard").then((m) => ({ default: m.TradeLicenceWizard })));
+const EmployerRegistrationModule = lazy(() => import("@/components/employer-registration-wizard").then((m) => ({ default: m.EmployerRegistrationModule })));
+const TrustWizard = lazy(() => import("@/components/trust-wizard").then((m) => ({ default: m.TrustWizard })));
+const SoleProprietorshipWizard = lazy(() => import("@/components/sole-proprietorship-wizard").then((m) => ({ default: m.SoleProprietorshipWizard })));
+const MsmeModule = lazy(() => import("@/components/msme-wizard").then((m) => ({ default: m.MsmeModule })));
+const NgoDarpanModule = lazy(() => import("@/components/ngo-darpan-wizard").then((m) => ({ default: m.NgoDarpanModule })));
+const DinModule = lazy(() => import("@/components/din-wizard").then((m) => ({ default: m.DinModule })));
+const IecModule = lazy(() => import("@/components/iec-wizard").then((m) => ({ default: m.IecModule })));
+const LeiModule = lazy(() => import("@/components/lei-wizard").then((m) => ({ default: m.LeiModule })));
+const ReraModule = lazy(() => import("@/components/rera-wizard").then((m) => ({ default: m.ReraModule })));
+const DscModule = lazy(() => import("@/components/dsc-wizard").then((m) => ({ default: m.DscModule })));
+
+/**
+ * Each wizard is loaded on demand: opening one module downloads only that
+ * module's code instead of every wizard in the catalog at once.
+ */
+export function ModulePage(props: Parameters<typeof ModuleBody>[0]) {
+  return (
+    <Suspense fallback={<BrandLoader />}>
+      <ModuleBody {...props} />
+    </Suspense>
+  );
+}
+
+function ModuleBody({
   slug,
   initialName,
   initialType,
@@ -94,8 +109,7 @@ export function ModulePage({
     return <DscModule key={slug} initialName={initialName} slug={slug} />;
   if (slug.startsWith("conversion-"))
     return <ConversionModule key={slug} slug={slug} initialName={initialName} />;
-  if (isClosureSlug(slug))
-    return <ClosureModule key={slug} slug={slug} initialName={initialName} />;
+  if (slug.startsWith("closure-")) return <ClosureRoute slug={slug} initialName={initialName} />;
   if (DEPARTMENT_SLUGS.has(slug)) return <DepartmentPage slug={slug} />;
   return <ServiceDetailPage slug={slug} />;
 }

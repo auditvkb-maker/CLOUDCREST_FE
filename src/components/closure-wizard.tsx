@@ -117,6 +117,16 @@ export function isClosureSlug(slug: string): boolean {
   return slug in LAYOUTS || TYPE_PICKER_BASES.has(slug);
 }
 
+/**
+ * Entry point for any `closure-*` slug. Lives here, not in ModulePage, so the
+ * module page can load this whole file on demand without first importing it
+ * just to call isClosureSlug.
+ */
+export function ClosureRoute({ slug, initialName }: { slug: string; initialName?: string }) {
+  if (isClosureSlug(slug)) return <ClosureModule key={slug} slug={slug} initialName={initialName} />;
+  return <ServiceDetailPage slug={slug} />;
+}
+
 function heroHighlights(service: CatalogService | null | undefined) {
   const list: { icon: typeof Landmark; label: string }[] = [];
   if (service?.authority) list.push({ icon: Landmark, label: service.authority });

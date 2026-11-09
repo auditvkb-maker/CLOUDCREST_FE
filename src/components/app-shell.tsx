@@ -58,6 +58,13 @@ export default function AppShell({ children }: { children?: ReactNode }) {
    */
   const AUTO_COLLAPSE_MS = 5_000;
   const autoCollapseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /**
+   * Where the greeting stands. It waits ("pending") until the service catalog
+   * has arrived, so the visitor gets the full five seconds with the modules
+   * actually on screen rather than spending them looking at loading bars.
+   * Any manual open/close or interaction marks it "done" for good.
+   */
+  const greeting = useRef<"pending" | "running" | "done">("done");
 
   /**
    * The sidebar element, so the greeting can ask whether the pointer is over it
@@ -82,6 +89,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
    * overrule it — otherwise the sidebar they just opened snaps shut under them.
    */
   const cancelAutoCollapse = () => {
+    greeting.current = "done";
     if (autoCollapseTimer.current) {
       clearTimeout(autoCollapseTimer.current);
       autoCollapseTimer.current = null;
@@ -114,6 +122,20 @@ export default function AppShell({ children }: { children?: ReactNode }) {
     if (window.matchMedia("(max-width: 767px)").matches) return;
 
     setSidebarCollapsed(false);
+    greeting.current = "pending";
+    return cancelAutoCollapse;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Services come from the backend catalog; the built-in list is only a fallback
+  // so the sidebar still renders if the API is unreachable. Shared with the home
+  // page so a newly published service appears in both.
+  const { groups, loading } = useCatalogGroups();
+
+  // Start the countdown only once the catalog is on screen.
+  useEffect(() => {
+    if (loading || greeting.current !== "pending") return;
+    greeting.current = "running";
     autoCollapseTimer.current = setTimeout(() => {
       autoCollapseTimer.current = null;
       const el = asideRef.current;
@@ -125,10 +147,7 @@ export default function AppShell({ children }: { children?: ReactNode }) {
       }
       setSidebarCollapsed(true);
     }, AUTO_COLLAPSE_MS);
-
-    return cancelAutoCollapse;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loading]);
 
   /**
    * Take the visitor to the About section on the home page.
@@ -190,11 +209,6 @@ export default function AppShell({ children }: { children?: ReactNode }) {
       closeSidebar();
     }
   };
-
-  // Services come from the backend catalog; the built-in list is only a fallback
-  // so the sidebar still renders if the API is unreachable. Shared with the home
-  // page so a newly published service appears in both.
-  const { groups, loading } = useCatalogGroups();
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
